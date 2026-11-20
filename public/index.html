@@ -19,9 +19,9 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-c
 input,select,button,textarea{-webkit-appearance:none;appearance:none;border-radius:inherit}
 select{background-image:linear-gradient(45deg,transparent 50%,var(--slate) 50%),linear-gradient(135deg,var(--slate) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
 button,.somsa-btn,nav button,.notif-alert{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-body{min-height:100vh;min-height:100dvh;background:var(--bg-body);color:var(--text-color);padding-bottom:calc(30px + env(safe-area-inset-bottom));transition:background .3s,color .3s;overflow-x:hidden;width:100%}
-#loginScreen{height:100vh;height:100dvh;position:fixed;top:0;left:0;width:100%;background:#1A0007;display:flex;justify-content:center;align-items:center;z-index:9999;padding:0;overflow-y:auto}
-.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100vh;height:100dvh;background:rgba(15,23,42,.75);backdrop-filter:blur(6px);display:none;justify-content:center;align-items:center;z-index:10000;padding:15px;overflow-y:auto}
+body{min-height:100vh;min-height:100dvh;background:var(--bg-body);color:var(--text-color);padding-bottom:calc(30px + env(safe-area-inset-bottom));transition:background .3s,color .3s;overflow-x:hidden;width:100%;overscroll-behavior-y:none}
+#loginScreen{height:100vh;height:100dvh;position:fixed;top:0;left:0;width:100%;background:#1A0007;display:flex;justify-content:center;align-items:center;z-index:9999;padding:0;overflow-y:auto;overscroll-behavior:contain}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100vh;height:100dvh;background:rgba(15,23,42,.75);backdrop-filter:blur(6px);display:none;justify-content:center;align-items:center;z-index:10000;padding:15px;overflow-y:auto;overscroll-behavior:contain}
 .modal-box{background:var(--card-bg);padding:20px;border-radius:var(--radius-lg);width:100%;max-width:460px;max-height:92vh;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.3);color:var(--text-color);border:1px solid var(--border);margin:auto}
 #loginBg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
 #loginScreen .login-box{position:relative;z-index:1;max-width:none;width:100%;min-height:100%;margin:0;border-radius:0;border:none;box-shadow:none;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:calc(24px + env(safe-area-inset-top)) 20px;background:transparent!important;text-align:center}
@@ -124,6 +124,18 @@ body.dark-mode .type-summary-card .t-name{color:var(--gold)}
 table{min-width:480px}
 th,td{padding:9px 6px;white-space:nowrap}
 }
+</style>
+<script>
+/* Sahifa yuklanishidan oldin: agar sessiya bor bo'lsa, login ekrani ko'rinmasin (miltillashni oldini oladi) */
+(function(){
+    try {
+        var s = JSON.parse(localStorage.getItem('session'));
+        if (s && s.phone) document.documentElement.setAttribute('data-has-session', '1');
+    } catch (e) {}
+})();
+</script>
+<style>
+html[data-has-session="1"] #loginScreen{display:none!important}
 </style>
 </head>
 <body>
@@ -347,7 +359,7 @@ th,td{padding:9px 6px;white-space:nowrap}
                 <button type="button" class="admin-sub-btn" id="aSubBtn5" onclick="switchAdminSubTab(5)">💳 5. To'lov Tizimi & Admin Kartasi</button>
             </div>
 
-            <!-- ADMIN 1: TEKSHIRUVCHI QO'SHISH VA RO'YXAT -->
+            <!-- ADMIN 1 -->
             <div id="adminSub1" class="admin-sub-content">
                 <div class="card" style="border:2px solid var(--primary);">
                     <div class="card-title">➕ Yangi Tekshiruvchi Uchun Login va Parol Yaratish</div>
@@ -370,7 +382,7 @@ th,td{padding:9px 6px;white-space:nowrap}
                 </div>
             </div>
 
-            <!-- ADMIN 2: HAMMA TEKSHIRUVCHILARNI BOSHQARISH -->
+            <!-- ADMIN 2 -->
             <div id="adminSub2" class="admin-sub-content" style="display:none;">
                 <div class="card">
                     <div class="card-title">⚙️ Hamma Tekshiruvchilarni Boshqarish (Tasdiqlash / Muzlatish / Butunlay O'chirish)</div>
@@ -394,7 +406,7 @@ th,td{padding:9px 6px;white-space:nowrap}
                 </div>
             </div>
 
-            <!-- ADMIN 3: PLATFORMA STATISTIKASI -->
+            <!-- ADMIN 3 -->
             <div id="adminSub3" class="admin-sub-content" style="display:none;">
                 <div class="grid-3" style="margin-bottom:16px;">
                     <div class="stat-card"><div class="title">Jami Tekshiruvchilar (Kuzatuvchilar)</div><div class="val" id="statTekshiruvchilarCount">0 ta</div></div>
@@ -414,7 +426,7 @@ th,td{padding:9px 6px;white-space:nowrap}
                 </div>
             </div>
 
-            <!-- ADMIN 4: OYLIK TO'LOVLAR STATISTIKASI -->
+            <!-- ADMIN 4 -->
             <div id="adminSub4" class="admin-sub-content" style="display:none;">
                 <div class="grid-3" style="margin-bottom:16px;">
                     <div class="stat-card">
@@ -451,7 +463,7 @@ th,td{padding:9px 6px;white-space:nowrap}
                 </div>
             </div>
 
-            <!-- ADMIN 5: TO'LOV TIZIMI BO'LIMI -->
+            <!-- ADMIN 5 -->
             <div id="adminSub5" class="admin-sub-content" style="display:none;">
                 <div class="card" style="border:2px solid var(--gold);">
                     <div class="card-title">💳 To'lov Tizimi: Admin Kartasi va Oylik Tarifni Joylash</div>
@@ -464,7 +476,7 @@ th,td{padding:9px 6px;white-space:nowrap}
             </div>
         </div>
 
-        <!-- SOMSA FILIALLARI BO'LIMI (TEKSHIRUVCHI UCHUN) -->
+        <!-- SOMSA FILIALLARI -->
         <div id="branchesTab" class="tab-content">
             <div class="card" style="border:2px solid var(--primary);">
                 <div class="card-title">🏪 Yangi Somsa Filiali Qo'shish (Cheksiz)</div>
@@ -496,9 +508,8 @@ th,td{padding:9px 6px;white-space:nowrap}
             </div>
         </div>
 
-        <!-- TEKSHIRUVCHI PANELI (ASOSIY NATIJALAR FILIAL KESIMIDA) -->
+        <!-- TEKSHIRUVCHI PANELI -->
         <div id="ownerDashboardTab" class="tab-content">
-            <!-- FILIAL TANLASH PANELI -->
             <div class="branch-filter-bar">
                 <div>
                     <div style="font-size:11px; color:var(--gold); font-weight:800; letter-spacing:.5px;">FILIAL BO'YICHA KO'RISH</div>
@@ -510,7 +521,6 @@ th,td{padding:9px 6px;white-space:nowrap}
                 </div>
             </div>
 
-            <!-- BARCHA FILIALLARNING ALOHIDA-ALOHIDA QISQACHA SOLISHTIRUVI -->
             <div class="card" id="allBranchesComparisonCard">
                 <div class="card-title">🏪 Har Bir Filialning Bugungi Natijalari (Alohida-Alohida)</div>
                 <div class="table-container">
@@ -767,15 +777,15 @@ users.unshift({
 });
 save('users', users);
 
-let branches = safeParse('branches', []); // { id, ownerPhone, name, address, createdAt }
+let branches = safeParse('branches', []);
 let appSubSettings = safeParse('appSubSettings', { price: 10000, cardNumber: '8600 0000 0000 0000', cardOwner: 'Asilbek Admin' });
 let adminNotifications = safeParse('adminNotifications', []);
-let subPaymentHistory = safeParse('subPaymentHistory', []); // { id, date, time, phone, name, amount, expiresAt }
+let subPaymentHistory = safeParse('subPaymentHistory', []);
 
 let selectedLoginRole = 'sotuvchi';
 let currentUser = null;
 let selectedPaymentType = 'Naqd';
-let selectedBranchFilter = 'ALL'; // 'ALL' yoki branchId
+let selectedBranchFilter = 'ALL';
 
 let somsaTypes = safeParse('somsaTypes', [
     { id: 1, name: "Mol go'shtli", price: 10000 },
@@ -856,7 +866,6 @@ function daysUntilExpiry(user) {
     return Math.ceil((user.subExpiresAt - Date.now()) / DAY_MS);
 }
 
-// FILIAL VA EGASI BO'YICHA LOG FILTRLARI
 function filterLogsByScope(logs, ownerPhone, branchId) {
     return logs.filter(item => {
         if (ownerPhone && item.ownerPhone && item.ownerPhone !== ownerPhone) return false;
@@ -914,7 +923,7 @@ function pushAdminNotif(phone, name, type, message) {
 }
 
 // ==========================================
-// 1. FILIAL QO'SHISH TIZIMI (CHEKSIZ)
+// FILIAL QO'SHISH
 // ==========================================
 function createNewBranch() {
     if (!currentUser || currentUser.role !== 'tekshiruvchi' || isSuperAdmin(currentUser)) {
@@ -1057,7 +1066,7 @@ function renderBranchesList() {
 }
 
 // ==========================================
-// 2. BOSH ADMIN: TEKSHIRUVCHILARNI BOSHQARISH
+// BOSH ADMIN: TEKSHIRUVCHILARNI BOSHQARISH
 // ==========================================
 function switchAdminSubTab(n) {
     for (let i = 1; i <= 5; i++) {
@@ -1141,7 +1150,6 @@ function saveEditedTekCredentials() {
     alert(`✅ Tekshiruvchi ma'lumotlari yangilandi!\nLogin: ${newLogin}\nParol: ${newPass}`);
 }
 
-// TO'LOVNI TASDIQLASH (30 KUN SANASH BOSHLANADI VA TUSHUMGA QO'SHILADI)
 function approveTekshiruvchiPayment(phone) {
     if (!isSuperAdmin(currentUser)) return;
     const u = users.find(x => x.phone === phone);
@@ -1174,7 +1182,6 @@ function approveTekshiruvchiPayment(phone) {
     alert(`✅ ${u.name} to'lovi (${amount.toLocaleString()} so'm) tasdiqlandi!\nKun sanash boshlandi. Keyingi to'lov sanasi: ${formatDateUz(expires)}`);
 }
 
-// MUZLATISH (VAQTINCHA O'CHIRISH) YOKI ERITISH
 function toggleFreezeTekshiruvchi(phone) {
     if (!isSuperAdmin(currentUser)) return;
     const u = users.find(x => x.phone === phone);
@@ -1187,7 +1194,6 @@ function toggleFreezeTekshiruvchi(phone) {
         : `☀️ ${u.name} hisobi muzlatishdan chiqarildi!`);
 }
 
-// BUTUNLAY O'CHIRISH
 function permanentlyDeleteTekshiruvchi(phone) {
     if (!isSuperAdmin(currentUser)) return;
     const u = users.find(x => x.phone === phone);
@@ -1206,7 +1212,7 @@ function permanentlyDeleteTekshiruvchi(phone) {
 }
 
 // ==========================================
-// LOGIN & RUXSATLAR
+// LOGIN, SESSIYA & RUXSATLAR
 // ==========================================
 function handleLogin() {
     const now = Date.now();
@@ -1256,23 +1262,12 @@ function handleLogin() {
 
     if (user) {
         failedAttempts = 0;
-        currentUser = user;
-        selectedBranchFilter = 'ALL';
         errEl.style.display = 'none';
         document.getElementById('loginPassword').value = '';
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-
-        const roleBadge = isSuperAdmin(user) ? 'BOSH ADMIN' : (ROLE_NAMES[user.role] || user.role).toUpperCase();
-        const brTag = user.branchId ? ` • ${getBranchName(user.branchId)}` : '';
-        document.getElementById('currentUserDisplay').innerText = `👤 ${user.name} (${roleBadge}${brTag})`;
-
-        if (user.role === 'tekshiruvchi' && !isSuperAdmin(user) && !checkSubscriptionActive(user)) {
-            pushAdminNotif(user.phone, user.name, 'new_user', `Tekshiruvchi tizimga kirdi (To'lov kutilmoqda): ${user.name} (${user.phone})`);
-        }
-
-        applyRolePermissions(user);
-        refreshAllUI();
+        // Sessiyani eslab qolish: sahifa yangilansa ham login ekraniga qaytmaydi
+        try { localStorage.setItem('session', JSON.stringify({ phone: user.phone })); } catch (e) {}
+        localStorage.removeItem('lastTab');
+        enterApp(user, null);
     } else {
         failedAttempts++;
         errEl.innerText = `Login yoki parol xato! (Urinish: ${failedAttempts}/15)`;
@@ -1285,7 +1280,50 @@ function handleLogin() {
     }
 }
 
+// Ilovaga kirish (login yoki sessiyani tiklashda ishlatiladi)
+function enterApp(user, restoreTab) {
+    currentUser = user;
+    selectedBranchFilter = 'ALL';
+    document.documentElement.removeAttribute('data-has-session');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+
+    const roleBadge = isSuperAdmin(user) ? 'BOSH ADMIN' : (ROLE_NAMES[user.role] || user.role).toUpperCase();
+    const brTag = user.branchId ? ` • ${getBranchName(user.branchId)}` : '';
+    document.getElementById('currentUserDisplay').innerText = `👤 ${user.name} (${roleBadge}${brTag})`;
+
+    if (!restoreTab && user.role === 'tekshiruvchi' && !isSuperAdmin(user) && !checkSubscriptionActive(user)) {
+        pushAdminNotif(user.phone, user.name, 'new_user', `Tekshiruvchi tizimga kirdi (To'lov kutilmoqda): ${user.name} (${user.phone})`);
+    }
+
+    applyRolePermissions(user);
+
+    // Oxirgi ochiq bo'limni tiklash (agar bu rol uchun ruxsat etilgan bo'lsa)
+    if (restoreTab) {
+        const btn = Array.from(document.querySelectorAll('nav button'))
+            .find(b => (b.getAttribute('onclick') || '').includes("'" + restoreTab + "'"));
+        if (btn && btn.style.display !== 'none') switchTab(restoreTab);
+    }
+    refreshAllUI();
+}
+
+function clearSession() {
+    localStorage.removeItem('session');
+    localStorage.removeItem('lastTab');
+    document.documentElement.removeAttribute('data-has-session');
+}
+
+function restoreSession() {
+    const s = safeParse('session', null);
+    if (!s || !s.phone) { clearSession(); return; }
+    const u = users.find(x => x.phone === s.phone);
+    const owner = (u && u.ownerPhone) ? users.find(x => x.phone === u.ownerPhone) : null;
+    if (!u || u.frozen || u.blocked || (owner && owner.frozen)) { clearSession(); return; }
+    enterApp(u, localStorage.getItem('lastTab'));
+}
+
 function handleLogout() {
+    clearSession();
     currentUser = null;
     cart = [];
     renderCart();
@@ -1321,7 +1359,7 @@ function applyRolePermissions(user) {
 }
 
 // ==========================================
-// SMS / OGOHLANTIRISH XABARLARI (30 KUNLIK MUDDAT)
+// SMS / OGOHLANTIRISH XABARLARI
 // ==========================================
 function renderGlobalSmsAlerts() {
     const area = document.getElementById('globalSmsAlertArea');
@@ -1441,7 +1479,7 @@ function renderAdminNotifications() {
 }
 
 // ==========================================
-// SOMSA CHIQARISH & KASSA (FILIALGA BOG'LANGAN)
+// SOMSA CHIQARISH & KASSA
 // ==========================================
 function setStatus(status) {
     currentStatus = status;
@@ -1703,19 +1741,17 @@ function renderExpenses() {
 }
 
 // ==========================================
-// TEKSHIRUVCHI DASHBOARD & ADMIN DASHBOARD RENDER
+// DASHBOARDLAR
 // ==========================================
 function setText(id, text) { const el = document.getElementById(id); if (el) el.innerText = text; }
 
 function renderOwnerDashboard() {
     const today = todayStr();
 
-    // 1. TEKSHIRUVCHI PANELI (FILIAL KESIMIDA)
     if (currentUser && currentUser.role === 'tekshiruvchi' && !isSuperAdmin(currentUser)) {
         const myOwner = currentUser.phone;
         const myBrs = getMyBranches(myOwner);
 
-        // Filial filter dropdown
         const filterSel = document.getElementById('ownerBranchFilter');
         if (filterSel) {
             filterSel.innerHTML = `<option value="ALL">🌐 Barcha filiallar (Umumiy)</option>` +
@@ -1732,7 +1768,6 @@ function renderOwnerDashboard() {
             ? `Barcha filiallar (${myBrs.length} ta filial umumiy)`
             : `🏪 ${getBranchName(selectedBranchFilter)} (Alohida hisobot)`);
 
-        // Har bir filialning alohida natijasi jadvali
         const compBody = document.getElementById('ownerBranchComparisonTable');
         if (compBody) {
             if (myBrs.length === 0) {
@@ -1793,7 +1828,6 @@ function renderOwnerDashboard() {
         }
     }
 
-    // 2. BOSH ADMIN PANELI STATISTIKA VA JADVALLARI
     if (isSuperAdmin(currentUser)) {
         const tekshiruvchilar = users.filter(u => u.role === 'tekshiruvchi' && !isSuperAdmin(u));
         const activeT = tekshiruvchilar.filter(u => checkSubscriptionActive(u));
@@ -1810,7 +1844,6 @@ function renderOwnerDashboard() {
         const totalGmv = salesLogs.reduce((a, s) => a + s.total, 0);
         setText('statTotalPlatformGmv', totalGmv.toLocaleString() + " so'm");
 
-        // Oylik to'lovlar jami summasi
         const collectedSum = subPaymentHistory.reduce((a, p) => a + Number(p.amount || 0), 0);
         setText('adminTotalCollectedSum', collectedSum.toLocaleString() + " so'm");
         setText('adminTotalPaymentsCount', subPaymentHistory.length + " ta");
@@ -1827,7 +1860,6 @@ function renderOwnerDashboard() {
             </tr>`).join('') : `<tr><td colspan="5" style="text-align:center; color:var(--slate);">Hozircha to'lovlar kelib tushmagan</td></tr>`;
         }
 
-        // Tekshiruvchilar ro'yxati (login-parollarni ko'rish va tiklash)
         const listBody = document.getElementById('adminTekshiruvchiListTable');
         if (listBody) {
             listBody.innerHTML = tekshiruvchilar.length ? tekshiruvchilar.map(u => {
@@ -1846,7 +1878,6 @@ function renderOwnerDashboard() {
             }).join('') : `<tr><td colspan="6" style="text-align:center; color:var(--slate);">Hozircha tekshiruvchi yaratilmagan</td></tr>`;
         }
 
-        // Hamma tekshiruvchilarni boshqarish (Tasdiqlash / Muzlatish / Butunlay o'chirish)
         const manageBody = document.getElementById('adminManageTekshiruvchiTable');
         if (manageBody) {
             manageBody.innerHTML = tekshiruvchilar.length ? tekshiruvchilar.map(u => {
@@ -1873,7 +1904,6 @@ function renderOwnerDashboard() {
     }
 }
 
-// QO'SHIMCHA XODIMLAR JADVALI (TEKSHIRUVCHI UCHUN)
 function addUser() {
     if (!currentUser || currentUser.role !== 'tekshiruvchi' || isSuperAdmin(currentUser)) return;
     const branchId = document.getElementById('newUserBranch').value;
@@ -2030,7 +2060,7 @@ function renderAuditRequests() {
         if (!tbody) return;
         const pending = auditRequests.filter(r => r.status === 'Kutilmoqda' && filterFn(r));
         tbody.innerHTML = pending.length ? pending.map(r => `<tr>
-            <td><b>${r.type === 'password' ? 'Parol tiklash' : r.type}</b></td>
+            <td><b>${r.type === 'password' ? 'Parol tiklash' : esc(r.type)}</b></td>
             <td>${esc(r.requestedBy)}</td>
             <td>${r.type === 'password' ? `Login: ${esc(r.phone)}` : 'Yozuv tahriri'}</td>
             <td><i>${esc(r.reason)}</i></td>
@@ -2162,6 +2192,8 @@ function switchTab(tabId) {
     document.getElementById(tabId).classList.add('active');
     const btn = Array.from(document.querySelectorAll('nav button')).find(b => (b.getAttribute('onclick') || '').includes("'" + tabId + "'"));
     if (btn) btn.classList.add('active');
+    // Oxirgi ochiq bo'limni eslab qolish (sahifa yangilanganda tiklanadi)
+    try { if (currentUser) localStorage.setItem('lastTab', tabId); } catch (e) {}
 }
 
 function refreshAllUI() {
@@ -2198,6 +2230,7 @@ window.onload = function() {
     document.getElementById('fontSizeSelect').value = savedFontSize;
     selectLoginRole('sotuvchi');
     renderCart();
+    restoreSession();
 };
 </script>
 </body>
