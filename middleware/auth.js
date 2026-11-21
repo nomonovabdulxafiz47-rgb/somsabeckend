@@ -14,3 +14,6 @@ export function requireAuth(req, res, next) {
 
 export const requireSuperAdmin = (req, res, next) =>
   req.user?.isSuperAdmin ? next() : res.status(403).json({ error: "Faqat Bosh Admin" });
+
+// Eski nom ham ishlashi uchun (boshqa joyda verifyAuth import qilingan bo'lsa)
+export const verifyAuth = requireAuth;
