@@ -1,24 +1,26 @@
+import 'dotenv/config';
 import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import rateLimit from 'express-rate-limit';
 import apiRoutes from './routes/api.js';
-import { errorHandler } from './middleware/errorHandler.js';
+import { notFound, errorHandler } from './middleware/errorHandler.js';
 
-dotenv.config();
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
-app.use(express.static('public')); // public papkasi ichidagi index.html uchun
+app.set('trust proxy', 1);
+app.use(express.json({ limit: '200kb' }));
 
-// API marshrutlari
+app.use('/api/auth/login', rateLimit({
+  windowMs: 15 * 60 * 1000, max: 20, standardHeaders: true, legacyHeaders: false,
+  message: { error: "Juda ko’p urinish. 15 daqiqadan keyin qayta urinib ko’ring." }
+}));
+
 app.use('/api', apiRoutes);
-
-// Xatoliklarni ushlash middleware
+app.use('/api', notFound);
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server ${PORT}-portda ishga tushdi!`);
-});
+app.listen(PORT, () => console.log(`Server ${PORT}-portda ishga tushdi!`));
