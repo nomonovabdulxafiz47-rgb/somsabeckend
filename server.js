@@ -1,26 +1,18 @@
-import 'dotenv/config';
-import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import rateLimit from 'express-rate-limit';
-import apiRoutes from './routes/api.js';
-import { notFound, errorHandler } from './middleware/errorHandler.js';
+export function notFound(req, res) {
+  res.status(404).json({ error: "Manzil topilmadi" });
+}
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const app = express();
-const PORT = process.env.PORT || 3000;
+export function errorHandler(err, req, res, next) {
+  console.error(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`, err.stack || err);
 
-app.set('trust proxy', 1);
-app.use(express.json({ limit: '200kb' }));
+  if (res.headersSent) return next(err);
 
-app.use('/api/auth/login', rateLimit({
-  windowMs: 15 * 60 * 1000, max: 20, standardHeaders: true, legacyHeaders: false,
-  message: { error: "Juda ko’p urinish. 15 daqiqadan keyin qayta urinib ko’ring." }
-}));
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({ error: "So'rov formati noto'g'ri" });
+  }
+  if (err.type === 'entity.too.large') {
+    return res.status(413).json({ error: "So'rov hajmi juda katta" });
+  }
 
-app.use('/api', apiRoutes);
-app.use('/api', notFound);
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(errorHandler);
-
-app.listen(PORT, () => console.log(`Server ${PORT}-portda ishga tushdi!`));
+  res.status(err.status || 500).json({ error: "Serverda xatolik yuz berdi!" });
+}
