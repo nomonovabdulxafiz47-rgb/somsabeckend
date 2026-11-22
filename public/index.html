@@ -42,6 +42,18 @@ body.drawer-lock{overflow:hidden!important;touch-action:none}
 ::-webkit-scrollbar-thumb{background:rgba(100,116,139,.35);border-radius:8px}
 ::-webkit-scrollbar-track{background:transparent}
 
+/* ===== TOAST BILDIRISHNOMA ===== */
+.pos-toast-wrap{position:fixed;top:calc(58px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:20000;width:min(92vw,420px);display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.pos-toast{pointer-events:auto;background:var(--card-bg);color:var(--text-color);border:1.5px solid var(--border);border-left:5px solid var(--success);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow-lg);display:flex;align-items:flex-start;gap:10px;opacity:0;transform:translateY(-12px) scale(.97);transition:opacity .25s var(--ease),transform .25s var(--ease);white-space:pre-line;font-size:13px;font-weight:700;line-height:1.45;overflow-wrap:anywhere}
+.pos-toast.show{opacity:1;transform:translateY(0) scale(1)}
+.pos-toast.toast-success{border-left-color:var(--success);background:linear-gradient(135deg,var(--card-bg),var(--success-light))}
+.pos-toast.toast-danger{border-left-color:var(--danger);background:linear-gradient(135deg,var(--card-bg),var(--danger-light))}
+.pos-toast.toast-warning{border-left-color:var(--warning);background:linear-gradient(135deg,var(--card-bg),var(--warning-light))}
+.pos-toast.toast-info{border-left-color:var(--gold);background:linear-gradient(135deg,var(--card-bg),var(--gold-light))}
+.pos-toast-icon{font-size:18px;line-height:1.2;flex:none}
+.pos-toast-text{flex:1;min-width:0}
+.pos-toast-close{background:none;border:none;color:var(--slate);font-size:15px;font-weight:800;cursor:pointer;padding:0 2px;line-height:1;flex:none}
+
 /* ===== LOGIN ===== */
 #loginScreen{height:100vh;height:100dvh;position:fixed;top:0;left:0;width:100%;background:#1A0007;display:flex;justify-content:center;align-items:center;z-index:9999;padding:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #loginBg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
@@ -225,6 +237,8 @@ html[data-has-session="1"] #loginScreen{display:none!important}
 </style>
 </head>
 <body>
+
+<div id="posToastContainer" class="pos-toast-wrap" aria-live="polite" aria-atomic="false"></div>
 
 <!-- LOGIN EKRANI -->
 <div id="loginScreen">
@@ -838,6 +852,33 @@ html[data-has-session="1"] #loginScreen{display:none!important}
 </div>
 
 <script>
+function showToast(msg, type) {
+    const container = document.getElementById('posToastContainer');
+    if (!container) return;
+    const raw = String(msg === null || msg === undefined ? '' : msg).replace(/^✅\s*|^❌\s*|^⚠️\s*|^ℹ️\s*/u, '');
+    let tone = type;
+    if (!tone) {
+        if (/^✅|muvaffaqiyatli|saqlandi|tasdiqlandi|yangilandi|yaratildi|yuborildi|nusxalandi|faollashtirildi/i.test(raw)) tone = 'success';
+        else if (/xato|noto'g'ri|yetarli emas|bo'sh|band|mavjud|muhim|diqqat|o'chirildi|muzlatildi/i.test(raw)) tone = 'danger';
+        else if (/kiriting|belgi|tanlang|bir xil/i.test(raw)) tone = 'warning';
+        else tone = 'info';
+    }
+    const icons = { success: '✅', danger: '⚠️', warning: '💡', info: '🥐' };
+    const toast = document.createElement('div');
+    toast.className = 'pos-toast toast-' + tone;
+    toast.innerHTML = `<span class="pos-toast-icon">${icons[tone] || '🥐'}</span><div class="pos-toast-text">${esc(raw)}</div><button type="button" class="pos-toast-close" aria-label="Yopish">✕</button>`;
+    const removeToast = () => {
+        toast.classList.remove('show');
+        setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 250);
+    };
+    toast.querySelector('.pos-toast-close').onclick = removeToast;
+    container.appendChild(toast);
+    while (container.children.length > 3) container.removeChild(container.firstChild);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    setTimeout(removeToast, 3400);
+}
+window.alert = function(msg) { showToast(msg); };
+
 function safeParse(key, fallback) {
     try { const v = JSON.parse(localStorage.getItem(key)); return (v === null || v === undefined) ? fallback : v; }
     catch (e) { return fallback; }
