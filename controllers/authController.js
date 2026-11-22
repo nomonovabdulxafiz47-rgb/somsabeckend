@@ -3,9 +3,12 @@ import jwt from 'jsonwebtoken';
 import { supabase } from '../config/database.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error('JWT_SECRET .env faylida topilmadi!');
+if (!JWT_SECRET) throw new Error('JWT_SECRET o\'zgaruvchisi topilmadi! Render > Environment bo\'limiga qo\'shing.');
 
-const normLogin = s => String(s || '').trim().toLowerCase();
+const MIN_PASSWORD = 6;
+const MAX_PASSWORD = 72; // bcrypt faqat birinchi 72 baytni hisobga oladi
+
+const normLogin = s => String(s ?? '').trim().toLowerCase();
 const validLogin = s => /^[a-z0-9_.\-]{3,30}$/.test(s);
 
 function safeUser(u) {
@@ -22,17 +25,24 @@ function subActive(u) {
   return false;
 }
 
+// Foydalanuvchi topilmaganda ham bcrypt vaqti sarflansin (login mavjudligini bildirmaslik uchun)
+const DUMMY_HASH = bcrypt.hashSync('dummy-password-for-timing', 10);
+
 export async function loginUser(req, res) {
   try {
-    const login = normLogin(req.body.login);
-    const password = String(req.body.password || '');
-    const role = req.body.role;
+    const login = normLogin(req.body?.login);
+    const password = String(req.body?.password ?? '');
+    const role = req.body?.role;
 
-    const { data: user } = await supabase
+    if (!login || !password || password.length > MAX_PASSWORD)
+      return res.status(401).json({ error: "Login yoki parol xato!" });
+
+    const { data: user, error: dbErr } = await supabase
       .from('users').select('*').eq('login', login).maybeSingle();
+    if (dbErr) throw dbErr;
 
-    const ok = user && await bcrypt.compare(password, user.pass_hash);
-    if (!ok) return res.status(401).json({ error: "Login yoki parol xato!" });
+    const ok = await bcrypt.compare(password, user?.pass_hash || DUMMY_HASH);
+    if (!user || !ok) return res.status(401).json({ error: "Login yoki parol xato!" });
 
     if (!user.is_super_admin && user.role !== role)
       return res.status(403).json({ error: `Bu hisob "${user.role}" lavozimiga tegishli.` });
@@ -40,8 +50,9 @@ export async function loginUser(req, res) {
     if (user.blocked) return res.status(403).json({ error: "Hisob bloklangan!" });
 
     if (user.owner_login) {
-      const { data: owner } = await supabase
+      const { data: owner, error: ownerErr } = await supabase
         .from('users').select('frozen').eq('login', user.owner_login).maybeSingle();
+      if (ownerErr) throw ownerErr;
       if (owner?.frozen)
         return res.status(403).json({ error: "Filial egasining hisobi muzlatilgan!" });
     }
@@ -54,9 +65,13 @@ export async function loginUser(req, res) {
       branchId: user.branch_id || null
     }, JWT_SECRET, { expiresIn: '7d' });
 
-    res.json({ success: true, token, user: { ...safeUser(user), sub_active: subActive(user) } });
+    res.json({
+      success: true,
+      token,
+      user: { ...safeUser(user), sub_active: subActive(user) }
+    });
   } catch (err) {
-    console.error(err);
+    console.error('loginUser xatosi:', err);
     res.status(500).json({ error: "Server xatosi" });
   }
 }
@@ -65,16 +80,23 @@ export async function loginUser(req, res) {
 export async function registerUser(req, res) {
   try {
     const me = req.user;
-    const name = String(req.body.name || '').trim();
-    const login = normLogin(req.body.login);
-    const password = String(req.body.password || '');
-    const role = req.body.role;
+    if (!me) return res.status(401).json({ error: "Avval tizimga kiring!" });
 
-    if (!name) return res.status(400).json({ error: "Ismni kiriting!" });
-    if (!validLogin(login)) return res.status(400).json({ error: "Login 3-30 belgi bo'lsin!" });
-    if (password.length < 4) return res.status(400).json({ error: "Parol kamida 4 belgi!" });
+    const name = String(req.body?.name ?? '').trim();
+    const login = normLogin(req.body?.login);
+    const password = String(req.body?.password ?? '');
+    const role = req.body?.role;
 
-    let row = { login, name, pass_hash: await bcrypt.hash(password, 10), role };
+    if (!name || name.length > 60)
+      return res.status(400).json({ error: "Ismni to'g'ri kiriting (1-60 belgi)!" });
+    if (!validLogin(login))
+      return res.status(400).json({ error: "Login 3-30 belgi bo'lsin (a-z, 0-9, _ . -)!" });
+    if (password.length < MIN_PASSWORD)
+      return res.status(400).json({ error: `Parol kamida ${MIN_PASSWORD} belgi bo'lsin!` });
+    if (password.length > MAX_PASSWORD)
+      return res.status(400).json({ error: `Parol ko'pi bilan ${MAX_PASSWORD} belgi bo'lsin!` });
+
+    const row = { login, name, pass_hash: await bcrypt.hash(password, 10), role };
 
     if (me.isSuperAdmin) {
       if (role !== 'tekshiruvchi')
@@ -83,9 +105,15 @@ export async function registerUser(req, res) {
     } else if (me.role === 'tekshiruvchi') {
       if (!['sotuvchi', 'somsachi'].includes(role))
         return res.status(403).json({ error: "Faqat Sotuvchi yoki Somsachi qo'sha olasiz" });
-      const { data: br } = await supabase.from('branches').select('id')
-        .eq('id', req.body.branchId).eq('owner_login', me.login).maybeSingle();
+
+      const branchId = req.body?.branchId;
+      if (!branchId) return res.status(400).json({ error: "Filialni tanlang!" });
+
+      const { data: br, error: brErr } = await supabase.from('branches').select('id')
+        .eq('id', branchId).eq('owner_login', me.login).maybeSingle();
+      if (brErr) throw brErr;
       if (!br) return res.status(400).json({ error: "Bunday filial sizda yo'q" });
+
       row.owner_login = me.login;
       row.branch_id = br.id;
       row.sub_status = 'free';
@@ -100,7 +128,7 @@ export async function registerUser(req, res) {
     }
     res.json({ success: true, user: safeUser(data) });
   } catch (err) {
-    console.error(err);
+    console.error('registerUser xatosi:', err);
     res.status(500).json({ error: "Server xatosi" });
   }
 }
