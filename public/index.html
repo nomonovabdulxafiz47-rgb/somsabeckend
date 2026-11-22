@@ -32,24 +32,28 @@ body.dark-mode{
   --shadow-sm:0 1px 2px rgba(0,0,0,.3);--shadow:0 10px 30px -10px rgba(0,0,0,.6);
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-size:var(--font-size)}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent;overflow-x:hidden;overscroll-behavior-y:none;scroll-behavior:smooth}
+
+/* Barcha panellarda vertikal surish (scroll) erkin ishlashi uchun */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent;overflow-y:auto;height:auto}
+html[data-has-session="1"] #loginScreen{display:none!important}
+
 input,select,button,textarea{-webkit-appearance:none;appearance:none;border-radius:inherit}
 select{background-image:linear-gradient(45deg,transparent 50%,var(--slate) 50%),linear-gradient(135deg,var(--slate) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
 button,.somsa-btn,.drawer button,.notif-alert{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-body{min-height:100vh;min-height:100dvh;background:var(--bg-body);background-image:radial-gradient(900px 400px at 100% -10%,rgba(122,10,36,.06),transparent 60%),radial-gradient(700px 400px at -10% 110%,rgba(217,179,74,.07),transparent 60%);background-attachment:fixed;color:var(--text-color);padding-bottom:calc(30px + env(safe-area-inset-bottom));transition:background .3s,color .3s;overflow-x:hidden;width:100%;overscroll-behavior-y:none}
+
+body{min-height:100vh;min-height:100dvh;height:auto;background:var(--bg-body);background-image:radial-gradient(900px 400px at 100% -10%,rgba(122,10,36,.06),transparent 60%),radial-gradient(700px 400px at -10% 110%,rgba(217,179,74,.07),transparent 60%);color:var(--text-color);padding-bottom:calc(40px + env(safe-area-inset-bottom));transition:background .3s,color .3s;overflow-x:clip;overflow-y:auto;-webkit-overflow-scrolling:touch;width:100%}
 body.drawer-lock{overflow:hidden}
 ::-webkit-scrollbar{width:8px;height:8px}
 ::-webkit-scrollbar-thumb{background:rgba(100,116,139,.35);border-radius:8px}
 ::-webkit-scrollbar-track{background:transparent}
 
 /* ===== LOGIN ===== */
-#loginScreen{height:100vh;height:100dvh;position:fixed;top:0;left:0;width:100%;background:#1A0007;display:flex;justify-content:center;align-items:center;z-index:9999;padding:0;overflow-y:auto;overscroll-behavior:contain}
+#loginScreen{height:100vh;height:100dvh;position:fixed;top:0;left:0;width:100%;background:#1A0007;display:flex;justify-content:center;align-items:center;z-index:9999;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #loginBg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
 #loginScreen .login-box{position:relative;z-index:1;width:100%;min-height:100%;margin:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:calc(24px + env(safe-area-inset-top)) 20px;background:transparent!important;text-align:center}
 #loginScreen .login-box>*{width:100%;max-width:420px}
 #loginScreen .login-box h2{font-size:32px;font-weight:800;color:var(--gold);text-shadow:0 2px 16px rgba(0,0,0,.6);margin-bottom:6px;letter-spacing:-.5px}
 #loginScreen .login-box>p{color:#F1E6D0!important;text-shadow:0 1px 6px rgba(0,0,0,.6);margin-bottom:14px}
-#loginScreen .login-box>*:not(h2):not(p):not(.forgot-link):not(.btn-main):not(.role-tabs):not(.form-group){}
 #loginScreen .form-group,#loginScreen .role-tabs,#loginScreen .btn-main{background:transparent}
 .role-tabs{display:flex;gap:6px;margin:16px 0;background:rgba(255,255,255,.08);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:5px;border-radius:16px;border:1px solid rgba(255,255,255,.14)}
 .role-tab-btn{flex:1;padding:10px 4px;border:none;background:transparent;font-weight:700;font-size:12px;border-radius:12px;cursor:pointer;color:#F1E6D0;transition:all .25s var(--ease);min-height:44px}
@@ -62,9 +66,23 @@ body.drawer-lock{overflow:hidden}
 .forgot-link{display:block;margin-top:14px;font-size:12px;color:#FFD97A;font-weight:600;cursor:pointer;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.7)}
 
 /* ===== MODAL ===== */
-.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100vh;height:100dvh;background:rgba(8,12,22,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;justify-content:center;align-items:center;z-index:10000;padding:15px;overflow-y:auto;overscroll-behavior:contain}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100vh;height:100dvh;background:rgba(8,12,22,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;justify-content:center;align-items:center;z-index:10000;padding:15px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .modal-box{background:var(--card-bg);padding:24px;border-radius:var(--radius-lg);width:100%;max-width:460px;max-height:92vh;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:center;box-shadow:var(--shadow-lg);color:var(--text-color);border:1px solid var(--border);margin:auto;animation:pop .3s var(--ease)}
 @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+
+/* ===== CHIROYLI DIALOG ===== */
+.ui-dialog{padding:28px 22px 22px;border-top:5px solid var(--gold);max-width:380px}
+.ui-dialog.success{border-top-color:var(--success)}
+.ui-dialog.warn{border-top-color:var(--warning)}
+.ui-dialog-icon{width:64px;height:64px;margin:-6px auto 12px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;background:var(--gold-light);border:2px solid rgba(217,179,74,.5)}
+.ui-dialog.success .ui-dialog-icon{background:var(--success-light);border-color:var(--success)}
+.ui-dialog.warn .ui-dialog-icon{background:var(--warning-light);border-color:var(--warning)}
+.ui-dialog-title{font-weight:800;font-size:16px;color:var(--primary);margin-bottom:8px}
+body.dark-mode .ui-dialog-title{color:var(--gold)}
+.ui-dialog-text{white-space:pre-line;font-size:14px;line-height:1.6;color:var(--text-color);font-weight:600;word-break:break-word}
+.ui-dialog-btns{display:flex;gap:10px;margin-top:20px}
+.ui-dialog-btns .btn-main{flex:1}
+.ui-dialog-btns .ui-cancel{background:var(--border);color:var(--text-color);box-shadow:none}
 
 /* ===== HEADER ===== */
 header{position:sticky;top:0;z-index:800;background:linear-gradient(120deg,var(--primary) 0%,#33000C 100%);color:#fff;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));box-shadow:0 8px 24px -8px rgba(60,0,16,.5);display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid rgba(217,179,74,.35)}
@@ -87,6 +105,7 @@ body.drawer-lock .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-
 /* ===== DRAWER (chapdan ochiladigan menyu) ===== */
 .drawer-backdrop{position:fixed;inset:0;background:rgba(6,10,20,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .3s;z-index:8990}
 .drawer-backdrop.show{opacity:1;pointer-events:auto}
+.drawer-backdrop:not(.show){pointer-events:none!important}
 .drawer{position:fixed;top:0;left:0;height:100vh;height:100dvh;width:var(--drawer-w);max-width:86vw;z-index:9000;background:linear-gradient(175deg,#12091A 0%,#0B1220 55%,#150610 100%);color:#E2E8F0;transform:translateX(-104%);transition:transform .38s var(--ease),box-shadow .38s;display:flex;flex-direction:column;border-right:1px solid rgba(217,179,74,.25);padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);will-change:transform}
 .drawer.open{transform:translateX(0);box-shadow:30px 0 70px rgba(0,0,0,.45)}
 .drawer.dragging{transition:none}
@@ -98,7 +117,7 @@ body.drawer-lock .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-
 .drawer-user-name{font-weight:800;font-size:13px;color:#fff;line-height:1.25;word-break:break-word}
 .drawer-user-role{font-size:11px;color:#F1D98A;font-weight:700;margin-top:2px;letter-spacing:.3px}
 .drawer-close{position:absolute;right:12px;top:12px;width:32px;height:32px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:16px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center}
-.drawer-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 12px}
+.drawer-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px 12px}
 .drawer-label{font-size:10px;font-weight:800;letter-spacing:1.2px;color:#7C8AA3;text-transform:uppercase;margin:6px 8px 8px}
 .drawer-nav{display:flex;flex-direction:column;gap:4px}
 .drawer-nav button{position:relative;display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:13px 14px;border:none;background:transparent;color:#B6C2D6;font-weight:700;font-size:13px;cursor:pointer;border-radius:14px;transition:background .2s,color .2s,transform .2s var(--ease)}
@@ -114,6 +133,7 @@ body.drawer-lock .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-
 
 /* ===== LAYOUT ===== */
 .container{max-width:1280px;margin:16px auto;padding:0 12px}
+.container::after{content:"";display:block;height:calc(120px + env(safe-area-inset-bottom))}
 .tab-content{display:none}
 .tab-content.active{display:block;animation:fadeIn .35s var(--ease)}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -200,9 +220,15 @@ table{min-width:480px}
 th,td{padding:10px 7px;white-space:nowrap}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ===== O'NG TOMONDAGI TEPAGA / PASGA TUGMALARI ===== */
+.scroll-fab{position:fixed;right:12px;bottom:calc(26px + env(safe-area-inset-bottom));z-index:700;display:flex;flex-direction:column;gap:10px;opacity:0;pointer-events:none;transform:translateX(14px);transition:opacity .25s,transform .25s var(--ease)}
+.scroll-fab.show{opacity:1;pointer-events:auto;transform:none}
+.scroll-fab button{width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(217,179,74,.7);background:linear-gradient(135deg,var(--primary-soft),var(--primary));color:#fff;font-size:18px;font-weight:800;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px -6px rgba(122,10,36,.6);transition:transform .15s,opacity .2s}
+.scroll-fab button:active{transform:scale(.9)}
+.scroll-fab button.hide{display:none}
 </style>
 <script>
-/* Sahifa yuklanishidan oldin: agar sessiya bor bo'lsa, login ekrani ko'rinmasin (miltillashni oldini oladi) */
 (function(){
     try {
         var s = JSON.parse(localStorage.getItem('session'));
@@ -210,9 +236,6 @@ th,td{padding:10px 7px;white-space:nowrap}
     } catch (e) {}
 })();
 </script>
-<style>
-html[data-has-session="1"] #loginScreen{display:none!important}
-</style>
 </head>
 <body>
 
@@ -837,6 +860,45 @@ function esc(s) {
     return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, c =>
         ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
+
+// ==========================================
+// CHIROYLI DIALOG OYNALARI
+// ==========================================
+function uiDialog(o) {
+    const ov = document.createElement('div');
+    ov.className = 'modal-overlay';
+    ov.style.display = 'flex';
+    ov.style.zIndex = 20000;
+    const icons = { success: '✅', warn: '⚠️', ask: '❓', info: '🥐' };
+    const hasInput = o.input !== undefined && o.input !== null;
+    ov.innerHTML = `<div class="modal-box ui-dialog ${o.type || 'info'}">
+        <div class="ui-dialog-icon">${icons[o.type] || '🥐'}</div>
+        <div class="ui-dialog-title">${esc(o.title || 'City Somsa POS')}</div>
+        <div class="ui-dialog-text">${esc(o.text)}</div>
+        ${hasInput ? `<input class="form-control" id="uiDlgInput" style="margin-top:14px" value="${esc(o.input)}">` : ''}
+        <div class="ui-dialog-btns">
+            ${o.confirm ? `<button type="button" class="btn-main ui-cancel">Bekor qilish</button>` : ''}
+            <button type="button" class="btn-main ui-ok">OK</button>
+        </div></div>`;
+    document.body.appendChild(ov);
+    const close = () => ov.remove();
+    ov.querySelector('.ui-ok').onclick = () => {
+        const val = hasInput ? ov.querySelector('#uiDlgInput').value : undefined;
+        close();
+        if (o.onOk) o.onOk(val);
+    };
+    const c = ov.querySelector('.ui-cancel');
+    if (c) c.onclick = close;
+    if (hasInput) setTimeout(() => ov.querySelector('#uiDlgInput').focus(), 50);
+}
+window.alert = function(msg) {
+    const s = String(msg);
+    const ok = /^(✅|☀️|❄️|🗑️)/.test(s);
+    uiDialog({ text: s.replace(/^(✅|☀️|❄️|🗑️)\s*/, ''), type: ok ? 'success' : 'warn' });
+};
+function askConfirm(text, onYes) { uiDialog({ text, type: 'ask', confirm: true, onOk: onYes }); }
+function askInput(text, def, onOk) { uiDialog({ text, type: 'ask', confirm: true, input: def, onOk }); }
+
 function pad2(n) { return String(n).padStart(2, '0'); }
 function todayStr() { const d = new Date(); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
 function formatDateUz(ts) {
@@ -942,7 +1004,7 @@ function openDrawer() {
 function closeDrawer() {
     const d = document.getElementById('sideDrawer');
     d.style.transform = '';
-    d.classList.remove('open');
+    d.classList.remove('open', 'dragging');
     d.setAttribute('aria-hidden', 'true');
     const bd = document.getElementById('drawerBackdrop');
     bd.classList.remove('show');
@@ -951,49 +1013,67 @@ function closeDrawer() {
 }
 function toggleDrawer() { isDrawerOpen() ? closeDrawer() : openDrawer(); }
 
+function syncDrawerLock() {
+    const d = document.getElementById('sideDrawer');
+    if (!d || d.classList.contains('open') || d.classList.contains('dragging')) return;
+    if (document.body.classList.contains('drawer-lock')) document.body.classList.remove('drawer-lock');
+    const bd = document.getElementById('drawerBackdrop');
+    if (bd && bd.classList.contains('show')) { bd.classList.remove('show'); bd.style.opacity = ''; }
+}
+['touchstart', 'touchend', 'touchcancel', 'scroll', 'pageshow', 'visibilitychange', 'resize']
+    .forEach(ev => window.addEventListener(ev, syncDrawerLock, { passive: true }));
+
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && isDrawerOpen()) closeDrawer(); });
 
 // Barmoq bilan surish: chap chetdan o'ngga — ochish, ochiq holatda chapga — yopish
 (function() {
     let startX = 0, startY = 0, tracking = false, mode = null, dx = 0, decided = false;
-    const W = () => document.getElementById('sideDrawer').offsetWidth;
+    const drawer = () => document.getElementById('sideDrawer');
+    const backdrop = () => document.getElementById('drawerBackdrop');
+    const W = () => drawer().offsetWidth;
+
+    function finish() {
+        const wasDecided = decided;
+        tracking = false; decided = false;
+        drawer().classList.remove('dragging');
+        if (!wasDecided) return;
+        const w = W();
+        if (mode === 'open') (dx > w * 0.33) ? openDrawer() : closeDrawer();
+        else (dx < -w * 0.25) ? closeDrawer() : openDrawer();
+    }
+
     document.addEventListener('touchstart', e => {
         if (!currentUser || document.getElementById('mainApp').style.display === 'none') return;
         if (document.querySelector('.modal-overlay[style*="flex"]')) return;
+        if (e.touches.length !== 1) { tracking = false; return; }
         const t = e.touches[0];
         startX = t.clientX; startY = t.clientY; dx = 0; decided = false;
         if (isDrawerOpen()) { tracking = true; mode = 'close'; }
         else if (startX <= 24) { tracking = true; mode = 'open'; }
         else tracking = false;
     }, { passive: true });
+
     document.addEventListener('touchmove', e => {
         if (!tracking) return;
         const t = e.touches[0];
         dx = t.clientX - startX;
         const dy = t.clientY - startY;
-        const d = document.getElementById('sideDrawer');
-        const bd = document.getElementById('drawerBackdrop');
         if (!decided) {
-            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-            if (Math.abs(dy) > Math.abs(dx)) { tracking = false; return; }
-            decided = true; d.classList.add('dragging');
+            if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+            if (Math.abs(dy) > Math.abs(dx) || (mode === 'close' && dx > 0)) { tracking = false; return; }
+            decided = true;
+            drawer().classList.add('dragging');
         }
         const w = W();
-        let pos = mode === 'open' ? Math.min(0, -w + dx) : Math.min(0, Math.max(-w, dx));
-        d.style.transform = `translateX(${pos}px)`;
+        const pos = mode === 'open' ? Math.min(0, -w + dx) : Math.min(0, Math.max(-w, dx));
+        drawer().style.transform = `translateX(${pos}px)`;
+        const bd = backdrop();
         bd.classList.add('show');
         bd.style.opacity = String(Math.max(0, Math.min(1, 1 + pos / w)));
     }, { passive: true });
-    document.addEventListener('touchend', () => {
-        if (!tracking) return;
-        tracking = false;
-        const d = document.getElementById('sideDrawer');
-        d.classList.remove('dragging');
-        if (!decided) return;
-        const w = W();
-        if (mode === 'open') (dx > w * 0.33) ? openDrawer() : closeDrawer();
-        else (dx < -w * 0.25) ? closeDrawer() : openDrawer();
-    }, { passive: true });
+
+    document.addEventListener('touchend', () => { if (tracking || decided) finish(); }, { passive: true });
+    document.addEventListener('touchcancel', () => { if (tracking || decided) finish(); }, { passive: true });
 })();
 
 function isSuperAdmin(user) { return !!user && (user.isSuperAdmin === true || user.phone === SUPER_ADMIN_LOGIN); }
@@ -1171,23 +1251,26 @@ function createNewBranch() {
 function deleteBranch(branchId) {
     const br = branches.find(b => b.id === branchId);
     if (!br) return;
-    if (!confirm(`"${br.name}" filialini va unga biriktirilgan xodim loginlarini o'chirishni tasdiqlaysizmi?`)) return;
-    branches = branches.filter(b => b.id !== branchId);
-    users = users.filter(u => u.branchId !== branchId);
-    if (selectedBranchFilter === branchId) selectedBranchFilter = 'ALL';
-    save('branches', branches);
-    save('users', users);
-    refreshAllUI();
+    askConfirm(`"${br.name}" filialini va unga biriktirilgan xodim loginlarini o'chirishni tasdiqlaysizmi?`, () => {
+        branches = branches.filter(b => b.id !== branchId);
+        users = users.filter(u => u.branchId !== branchId);
+        if (selectedBranchFilter === branchId) selectedBranchFilter = 'ALL';
+        save('branches', branches);
+        save('users', users);
+        refreshAllUI();
+    });
 }
 
 function openBranchReportDirect(branchId) {
     selectedBranchFilter = branchId;
+    try { localStorage.setItem('lastBranch', branchId); } catch (e) {}
     switchTab('ownerDashboardTab');
     refreshAllUI();
 }
 
 function onBranchFilterChange(val) {
     selectedBranchFilter = val;
+    try { localStorage.setItem('lastBranch', val); } catch (e) {}
     refreshAllUI();
 }
 
@@ -1239,14 +1322,18 @@ function renderBranchesList() {
 // ==========================================
 // BOSH ADMIN: TEKSHIRUVCHILARNI BOSHQARISH
 // ==========================================
-function switchAdminSubTab(n) {
+function showAdminSub(n) {
     for (let i = 1; i <= 5; i++) {
         const el = document.getElementById('adminSub' + i);
         const btn = document.getElementById('aSubBtn' + i);
         if (el) el.style.display = (i === n) ? 'block' : 'none';
         if (btn) btn.classList.toggle('active', i === n);
     }
-    // Ichki menyu bosilganda Admin paneliga o'tib, menyuni yopamiz
+    try { localStorage.setItem('lastAdminSub', String(n)); } catch (e) {}
+}
+
+function switchAdminSubTab(n) {
+    showAdminSub(n);
     if (currentUser && isSuperAdmin(currentUser)) {
         const panel = document.getElementById('adminPanelTab');
         if (!panel.classList.contains('active')) switchTab('adminPanelTab');
@@ -1376,17 +1463,16 @@ function permanentlyDeleteTekshiruvchi(phone) {
     if (!isSuperAdmin(currentUser)) return;
     const u = users.find(x => x.phone === phone);
     if (!u) return;
-    if (!confirm(`⚠️ DIQQAT! "${u.name}" (${u.phone}) tekshiruvchisini va uning barcha filiallari hamda xodimlarini BUTUNLAY o'chirmoqchimisiz?`)) return;
-
-    users = users.filter(x => x.phone !== phone && x.ownerPhone !== phone);
-    branches = branches.filter(b => b.ownerPhone !== phone);
-    adminNotifications = adminNotifications.filter(n => n.phone !== phone);
-
-    save('users', users);
-    save('branches', branches);
-    save('adminNotifications', adminNotifications);
-    refreshAllUI();
-    alert(`🗑️ ${u.name} platformadan butunlay o'chirildi!`);
+    askConfirm(`DIQQAT! "${u.name}" (${u.phone}) tekshiruvchisini va uning barcha filiallari hamda xodimlarini BUTUNLAY o'chirmoqchimisiz?`, () => {
+        users = users.filter(x => x.phone !== phone && x.ownerPhone !== phone);
+        branches = branches.filter(b => b.ownerPhone !== phone);
+        adminNotifications = adminNotifications.filter(n => n.phone !== phone);
+        save('users', users);
+        save('branches', branches);
+        save('adminNotifications', adminNotifications);
+        refreshAllUI();
+        alert(`🗑️ ${u.name} platformadan butunlay o'chirildi!`);
+    });
 }
 
 // ==========================================
@@ -1442,7 +1528,6 @@ function handleLogin() {
         failedAttempts = 0;
         errEl.style.display = 'none';
         document.getElementById('loginPassword').value = '';
-        // Sessiyani eslab qolish: sahifa yangilansa ham login ekraniga qaytmaydi
         try { localStorage.setItem('session', JSON.stringify({ phone: user.phone })); } catch (e) {}
         localStorage.removeItem('lastTab');
         enterApp(user, null);
@@ -1458,10 +1543,13 @@ function handleLogin() {
     }
 }
 
-// Ilovaga kirish (login yoki sessiyani tiklashda ishlatiladi)
 function enterApp(user, restoreTab) {
     currentUser = user;
     selectedBranchFilter = 'ALL';
+    if (restoreTab) {
+        const lb = localStorage.getItem('lastBranch');
+        if (lb && branches.some(b => b.id === lb)) selectedBranchFilter = lb;
+    }
     document.documentElement.removeAttribute('data-has-session');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
@@ -1479,11 +1567,14 @@ function enterApp(user, restoreTab) {
 
     applyRolePermissions(user);
 
-    // Oxirgi ochiq bo'limni tiklash (agar bu rol uchun ruxsat etilgan bo'lsa)
     if (restoreTab) {
         const btn = Array.from(document.querySelectorAll('#mainNav button'))
             .find(b => (b.getAttribute('onclick') || '').includes("'" + restoreTab + "'"));
         if (btn && btn.style.display !== 'none') switchTab(restoreTab);
+        if (isSuperAdmin(user)) {
+            const n = parseInt(localStorage.getItem('lastAdminSub'));
+            if (n >= 1 && n <= 5) showAdminSub(n);
+        }
     }
     closeDrawer();
     refreshAllUI();
@@ -1524,20 +1615,20 @@ function applyRolePermissions(user) {
 
     if (user.role === 'somsachi') {
         show(['navYopuvchi', 'navTarix']);
-        switchTab('yopuvchiTab');
+        switchTab('yopuvchiTab', true);
     } else if (user.role === 'sotuvchi') {
         show(['navKassa', 'navTarix']);
-        switchTab('kassaTab');
+        switchTab('kassaTab', true);
     } else if (isSuperAdmin(user)) {
         show(['navAdmin', 'navSozlama']);
-        switchTab('adminPanelTab');
+        switchTab('adminPanelTab', true);
     } else if (user.role === 'tekshiruvchi') {
         show(['navSubPay']);
         if (checkSubscriptionActive(user)) {
             show(['navOwner', 'navBranches', 'navTarix', 'navSozlama']);
-            switchTab('ownerDashboardTab');
+            switchTab('ownerDashboardTab', true);
         } else {
-            switchTab('subPaymentTab');
+            switchTab('subPaymentTab', true);
         }
     }
 }
@@ -1610,7 +1701,7 @@ function renderSubPaymentPanel() {
 function copyAdminCard() {
     const num = (appSubSettings.cardNumber || '').replace(/\s/g, '');
     if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(num).then(() => alert("Karta raqami nusxalandi: " + appSubSettings.cardNumber));
+        navigator.clipboard.writeText(num).then(() => alert("✅ Karta raqami nusxalandi: " + appSubSettings.cardNumber));
     } else {
         alert("Karta raqami: " + appSubSettings.cardNumber);
     }
@@ -1844,9 +1935,10 @@ function completeSale() {
 }
 
 function confirmCardSale() {
-    if (!confirm("Pul hisobga tushganini tekshirdingizmi?")) return;
-    closeModal('paymentModal');
-    saveFinalSale('Karta');
+    askConfirm("Pul hisobga tushganini tekshirdingizmi?", () => {
+        closeModal('paymentModal');
+        saveFinalSale('Karta');
+    });
 }
 
 function saveFinalSale(payType) {
@@ -2121,23 +2213,25 @@ function addUser() {
 function changeStaffPassword(phone) {
     const u = users.find(x => x.phone === phone);
     if (!u) return;
-    const p = prompt(`${u.name} (Login: ${u.phone}) uchun yangi parol (kamida 4 belgi):`, u.plainPass || '');
-    if (p === null) return;
-    if (p.trim().length < 4) { alert("Parol kamida 4 belgidan iborat bo'lsin!"); return; }
-    u.plainPass = p.trim();
-    u.passHash = hashPass(p.trim());
-    save('users', users);
-    refreshAllUI();
-    alert(`✅ ${u.name} paroli yangilandi: ${p.trim()}`);
+    askInput(`${u.name} (Login: ${u.phone}) uchun yangi parol (kamida 4 belgi):`, u.plainPass || '', p => {
+        p = (p || '').trim();
+        if (p.length < 4) { alert("Parol kamida 4 belgidan iborat bo'lsin!"); return; }
+        u.plainPass = p;
+        u.passHash = hashPass(p);
+        save('users', users);
+        refreshAllUI();
+        alert(`✅ ${u.name} paroli yangilandi: ${p}`);
+    });
 }
 
 function deleteUser(phone) {
     const u = users.find(x => x.phone === phone);
     if (!u || isSuperAdmin(u)) return;
-    if (!confirm(`${u.name} ni o'chirishni tasdiqlaysizmi?`)) return;
-    users = users.filter(x => x.phone !== phone);
-    save('users', users);
-    refreshAllUI();
+    askConfirm(`${u.name} ni o'chirishni tasdiqlaysizmi?`, () => {
+        users = users.filter(x => x.phone !== phone);
+        save('users', users);
+        refreshAllUI();
+    });
 }
 
 function renderUsers() {
@@ -2235,7 +2329,7 @@ function saveNewPassword() {
         save('auditRequests', auditRequests);
     }
     closeModal('forgotModal');
-    alert("So'rov Bosh Adminga yuborildi!");
+    alert("✅ So'rov Bosh Adminga yuborildi!");
 }
 
 function renderAuditRequests() {
@@ -2305,14 +2399,14 @@ function submitEditRequest() {
     auditRequests.unshift(req);
     save('auditRequests', auditRequests);
     closeModal('editModal');
-    alert("So'rov Tekshiruvchiga yuborildi!");
+    alert("✅ So'rov Tekshiruvchiga yuborildi!");
 }
 
 function saveCrmExpenses() {
     crmExpensesVal = parseInt(document.getElementById('crmExpenseInput').value) || 0;
     localStorage.setItem('crmExpensesVal', crmExpensesVal);
     renderOwnerDashboard();
-    alert("Xarajat saqlandi!");
+    alert("✅ Xarajat saqlandi!");
 }
 
 function changeOwnPassword() {
@@ -2370,16 +2464,16 @@ function saveCardNumber() {
     alert("✅ Karta saqlandi!");
 }
 
-function switchTab(tabId) {
+function switchTab(tabId, silent) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('#mainNav button').forEach(el => el.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
     const btn = Array.from(document.querySelectorAll('#mainNav button')).find(b => (b.getAttribute('onclick') || '').includes("'" + tabId + "'"));
     if (btn) btn.classList.add('active');
-    // Oxirgi ochiq bo'limni eslab qolish (sahifa yangilanganda tiklanadi)
-    try { if (currentUser) localStorage.setItem('lastTab', tabId); } catch (e) {}
+    try { if (currentUser && !silent) localStorage.setItem('lastTab', tabId); } catch (e) {}
     closeDrawer();
     window.scrollTo({ top: 0 });
+    setTimeout(updateScrollButtons, 50);
 }
 
 function refreshAllUI() {
@@ -2412,7 +2506,40 @@ function refreshAllUI() {
     if (so && document.activeElement !== so) so.value = appSubSettings.cardOwner;
 }
 
+// ==========================================
+// O'NG TOMONDAGI TEPAGA / PASGA TUGMALARI
+// ==========================================
+function initScrollButtons() {
+    if (document.getElementById('scrollFab')) return;
+    const box = document.createElement('div');
+    box.className = 'scroll-fab';
+    box.id = 'scrollFab';
+    box.innerHTML = '<button type="button" id="scrollUpBtn" aria-label="Tepaga">▲</button><button type="button" id="scrollDownBtn" aria-label="Pastga">▼</button>';
+    document.body.appendChild(box);
+    document.getElementById('scrollUpBtn').onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('scrollDownBtn').onclick = () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+    window.addEventListener('scroll', updateScrollButtons, { passive: true });
+    window.addEventListener('resize', updateScrollButtons, { passive: true });
+    setInterval(updateScrollButtons, 800);
+    updateScrollButtons();
+}
+function updateScrollButtons() {
+    const box = document.getElementById('scrollFab');
+    if (!box) return;
+    const app = document.getElementById('mainApp');
+    const loggedIn = !!currentUser && app && app.style.display !== 'none';
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const canScroll = max > 120;
+    const showUp = y > 150;
+    const showDown = max - y > 150;
+    document.getElementById('scrollUpBtn').classList.toggle('hide', !showUp);
+    document.getElementById('scrollDownBtn').classList.toggle('hide', !showDown);
+    box.classList.toggle('show', loggedIn && canScroll && (showUp || showDown));
+}
+
 window.onload = function() {
+    initScrollButtons();
     document.getElementById('fontSizeSelect').value = savedFontSize;
     selectLoginRole('sotuvchi');
     renderCart();
