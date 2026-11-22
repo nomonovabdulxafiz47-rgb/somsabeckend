@@ -161,6 +161,17 @@ function closeDrawer() {
 }
 function toggleDrawer() { isDrawerOpen() ? closeDrawer() : openDrawer(); }
 
+// TUZATISH: menyu yopiq bo'lsa, scroll qulfi (drawer-lock) va qora fon hech qachon qolib ketmasin
+function syncDrawerLock() {
+    const d = document.getElementById('sideDrawer');
+    if (!d || d.classList.contains('open') || d.classList.contains('dragging')) return;
+    if (document.body.classList.contains('drawer-lock')) document.body.classList.remove('drawer-lock');
+    const bd = document.getElementById('drawerBackdrop');
+    if (bd && bd.classList.contains('show')) { bd.classList.remove('show'); bd.style.opacity = ''; }
+}
+['touchstart', 'touchend', 'touchcancel', 'scroll', 'pageshow', 'visibilitychange', 'resize']
+    .forEach(ev => window.addEventListener(ev, syncDrawerLock, { passive: true }));
+
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && isDrawerOpen()) closeDrawer(); });
 
 // Barmoq bilan surish: chap chetdan o'ngga — ochish, ochiq holatda chapga — yopish
@@ -402,12 +413,14 @@ function deleteBranch(branchId) {
 
 function openBranchReportDirect(branchId) {
     selectedBranchFilter = branchId;
+    try { localStorage.setItem('lastBranch', branchId); } catch (e) {}
     switchTab('ownerDashboardTab');
     refreshAllUI();
 }
 
 function onBranchFilterChange(val) {
     selectedBranchFilter = val;
+    try { localStorage.setItem('lastBranch', val); } catch (e) {}
     refreshAllUI();
 }
 
@@ -459,13 +472,18 @@ function renderBranchesList() {
 // ==========================================
 // BOSH ADMIN: TEKSHIRUVCHILARNI BOSHQARISH
 // ==========================================
-function switchAdminSubTab(n) {
+function showAdminSub(n) {
     for (let i = 1; i <= 5; i++) {
         const el = document.getElementById('adminSub' + i);
         const btn = document.getElementById('aSubBtn' + i);
         if (el) el.style.display = (i === n) ? 'block' : 'none';
         if (btn) btn.classList.toggle('active', i === n);
     }
+    try { localStorage.setItem('lastAdminSub', String(n)); } catch (e) {}
+}
+
+function switchAdminSubTab(n) {
+    showAdminSub(n);
     // Ichki menyu bosilganda Admin paneliga o'tib, menyuni yopamiz
     if (currentUser && isSuperAdmin(currentUser)) {
         const panel = document.getElementById('adminPanelTab');
@@ -681,6 +699,10 @@ function handleLogin() {
 function enterApp(user, restoreTab) {
     currentUser = user;
     selectedBranchFilter = 'ALL';
+    if (restoreTab) {
+        const lb = localStorage.getItem('lastBranch');
+        if (lb && branches.some(b => b.id === lb)) selectedBranchFilter = lb;
+    }
     document.documentElement.removeAttribute('data-has-session');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
@@ -703,6 +725,10 @@ function enterApp(user, restoreTab) {
         const btn = Array.from(document.querySelectorAll('#mainNav button'))
             .find(b => (b.getAttribute('onclick') || '').includes("'" + restoreTab + "'"));
         if (btn && btn.style.display !== 'none') switchTab(restoreTab);
+        if (isSuperAdmin(user)) {
+            const n = parseInt(localStorage.getItem('lastAdminSub'));
+            if (n >= 1 && n <= 5) showAdminSub(n);
+        }
     }
     closeDrawer();
     refreshAllUI();
@@ -743,20 +769,20 @@ function applyRolePermissions(user) {
 
     if (user.role === 'somsachi') {
         show(['navYopuvchi', 'navTarix']);
-        switchTab('yopuvchiTab');
+        switchTab('yopuvchiTab', true);
     } else if (user.role === 'sotuvchi') {
         show(['navKassa', 'navTarix']);
-        switchTab('kassaTab');
+        switchTab('kassaTab', true);
     } else if (isSuperAdmin(user)) {
         show(['navAdmin', 'navSozlama']);
-        switchTab('adminPanelTab');
+        switchTab('adminPanelTab', true);
     } else if (user.role === 'tekshiruvchi') {
         show(['navSubPay']);
         if (checkSubscriptionActive(user)) {
             show(['navOwner', 'navBranches', 'navTarix', 'navSozlama']);
-            switchTab('ownerDashboardTab');
+            switchTab('ownerDashboardTab', true);
         } else {
-            switchTab('subPaymentTab');
+            switchTab('subPaymentTab', true);
         }
     }
 }
@@ -1592,14 +1618,14 @@ function saveCardNumber() {
     alert("✅ Karta saqlandi!");
 }
 
-function switchTab(tabId) {
+function switchTab(tabId, silent) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('#mainNav button').forEach(el => el.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
     const btn = Array.from(document.querySelectorAll('#mainNav button')).find(b => (b.getAttribute('onclick') || '').includes("'" + tabId + "'"));
     if (btn) btn.classList.add('active');
     // Oxirgi ochiq bo'limni eslab qolish (sahifa yangilanganda tiklanadi)
-    try { if (currentUser) localStorage.setItem('lastTab', tabId); } catch (e) {}
+    try { if (currentUser && !silent) localStorage.setItem('lastTab', tabId); } catch (e) {}
     closeDrawer();
     window.scrollTo({ top: 0 });
 }
