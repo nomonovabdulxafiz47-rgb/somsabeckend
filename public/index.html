@@ -12,118 +12,194 @@
 <title>City Somsa - Professional POS Tizimi (Multi-Filial & Admin)</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--primary:#6B001B;--primary-hover:#4D0013;--primary-light:#FFF0F3;--gold:#D4AF37;--gold-light:#FFF9E6;--dark:#0F172A;--slate:#475569;--bg-body:#F1F5F9;--card-bg:rgba(255,255,255,.95);--text-color:#0F172A;--success:#059669;--success-light:#ECFDF5;--danger:#DC2626;--danger-light:#FEF2F2;--warning:#D97706;--warning-light:#FFFBEB;--blue:#2563EB;--blue-light:#EFF6FF;--border:#E2E8F0;--radius-sm:8px;--radius:16px;--radius-lg:24px;--font-size:14px;--shadow:0 10px 25px -5px rgba(0,0,0,.05),0 8px 10px -6px rgba(0,0,0,.01)}
-body.dark-mode{--bg-body:#090D16;--card-bg:rgba(30,41,59,.95);--text-color:#F8FAFC;--slate:#94A3B8;--border:#334155;--primary-light:#2C000B;--gold-light:#2A240F;--success-light:#064E3B;--danger-light:#7F1D1D;--warning-light:#78350F;--blue-light:#1E3A8A}
+:root{
+  --primary:#7A0A24;--primary-hover:#5A0618;--primary-soft:#9B1B3A;--primary-light:#FFF1F4;
+  --gold:#D9B34A;--gold-light:#FFF8E3;
+  --dark:#0B1220;--slate:#5B6779;--bg-body:#F4F6FA;--card-bg:#FFFFFF;--text-color:#0F172A;
+  --success:#059669;--success-light:#E7F8F1;--danger:#DC2626;--danger-light:#FEEDED;
+  --warning:#D97706;--warning-light:#FFF5E1;--blue:#2563EB;--blue-light:#EAF1FF;
+  --border:#E6EAF1;--radius-sm:10px;--radius:18px;--radius-lg:26px;--font-size:14px;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.04),0 1px 3px rgba(15,23,42,.05);
+  --shadow:0 1px 2px rgba(15,23,42,.04),0 10px 30px -10px rgba(15,23,42,.12);
+  --shadow-lg:0 30px 60px -20px rgba(15,23,42,.35);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --drawer-w:296px;
+}
+body.dark-mode{
+  --bg-body:#070B14;--card-bg:#111A2B;--text-color:#F1F5F9;--slate:#94A3B8;--border:#223048;
+  --primary-light:#2A0A14;--gold-light:#262010;--success-light:#08362B;--danger-light:#3A1212;
+  --warning-light:#3A2608;--blue-light:#12264F;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3);--shadow:0 10px 30px -10px rgba(0,0,0,.6);
+}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-size:var(--font-size)}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent;overflow-x:hidden;overscroll-behavior-y:none}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent;overflow-x:hidden;overscroll-behavior-y:none;scroll-behavior:smooth}
 input,select,button,textarea{-webkit-appearance:none;appearance:none;border-radius:inherit}
 select{background-image:linear-gradient(45deg,transparent 50%,var(--slate) 50%),linear-gradient(135deg,var(--slate) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
-button,.somsa-btn,nav button,.notif-alert{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-body{min-height:100vh;min-height:100dvh;background:var(--bg-body);color:var(--text-color);padding-bottom:calc(30px + env(safe-area-inset-bottom));transition:background .3s,color .3s;overflow-x:hidden;width:100%;overscroll-behavior-y:none}
+button,.somsa-btn,.drawer button,.notif-alert{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body{min-height:100vh;min-height:100dvh;background:var(--bg-body);background-image:radial-gradient(900px 400px at 100% -10%,rgba(122,10,36,.06),transparent 60%),radial-gradient(700px 400px at -10% 110%,rgba(217,179,74,.07),transparent 60%);background-attachment:fixed;color:var(--text-color);padding-bottom:calc(30px + env(safe-area-inset-bottom));transition:background .3s,color .3s;overflow-x:hidden;width:100%;overscroll-behavior-y:none}
+body.drawer-lock{overflow:hidden}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:rgba(100,116,139,.35);border-radius:8px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ===== LOGIN ===== */
 #loginScreen{height:100vh;height:100dvh;position:fixed;top:0;left:0;width:100%;background:#1A0007;display:flex;justify-content:center;align-items:center;z-index:9999;padding:0;overflow-y:auto;overscroll-behavior:contain}
-.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100vh;height:100dvh;background:rgba(15,23,42,.75);backdrop-filter:blur(6px);display:none;justify-content:center;align-items:center;z-index:10000;padding:15px;overflow-y:auto;overscroll-behavior:contain}
-.modal-box{background:var(--card-bg);padding:20px;border-radius:var(--radius-lg);width:100%;max-width:460px;max-height:92vh;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.3);color:var(--text-color);border:1px solid var(--border);margin:auto}
 #loginBg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
-#loginScreen .login-box{position:relative;z-index:1;max-width:none;width:100%;min-height:100%;margin:0;border-radius:0;border:none;box-shadow:none;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:calc(24px + env(safe-area-inset-top)) 20px;background:transparent!important;text-align:center}
-#loginScreen .login-box>*{width:100%;max-width:460px}
-#loginScreen .login-box h2{font-size:30px;font-weight:800;color:var(--gold);text-shadow:0 2px 12px rgba(0,0,0,.6);margin-bottom:6px}
+#loginScreen .login-box{position:relative;z-index:1;width:100%;min-height:100%;margin:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:calc(24px + env(safe-area-inset-top)) 20px;background:transparent!important;text-align:center}
+#loginScreen .login-box>*{width:100%;max-width:420px}
+#loginScreen .login-box h2{font-size:32px;font-weight:800;color:var(--gold);text-shadow:0 2px 16px rgba(0,0,0,.6);margin-bottom:6px;letter-spacing:-.5px}
 #loginScreen .login-box>p{color:#F1E6D0!important;text-shadow:0 1px 6px rgba(0,0,0,.6);margin-bottom:14px}
-.role-tabs{display:flex;gap:6px;margin:16px 0;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);padding:5px;border-radius:var(--radius)}
-.role-tab-btn{flex:1;padding:10px 4px;border:none;background:transparent;font-weight:700;font-size:12px;border-radius:10px;cursor:pointer;color:#F1E6D0;transition:all .2s;min-height:44px}
-.role-tab-btn.active{background:var(--primary);color:#fff;box-shadow:0 4px 12px rgba(107,0,27,.4)}
-.admin-sub-tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
-.admin-sub-btn{padding:10px 14px;border:1px solid var(--border);background:var(--card-bg);color:var(--slate);font-weight:700;font-size:12px;border-radius:10px;cursor:pointer;white-space:nowrap;transition:all .2s}
-.admin-sub-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 4px 12px rgba(107,0,27,.3)}
+#loginScreen .login-box>*:not(h2):not(p):not(.forgot-link):not(.btn-main):not(.role-tabs):not(.form-group){}
+#loginScreen .form-group,#loginScreen .role-tabs,#loginScreen .btn-main{background:transparent}
+.role-tabs{display:flex;gap:6px;margin:16px 0;background:rgba(255,255,255,.08);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:5px;border-radius:16px;border:1px solid rgba(255,255,255,.14)}
+.role-tab-btn{flex:1;padding:10px 4px;border:none;background:transparent;font-weight:700;font-size:12px;border-radius:12px;cursor:pointer;color:#F1E6D0;transition:all .25s var(--ease);min-height:44px}
+.role-tab-btn.active{background:linear-gradient(135deg,var(--primary-soft),var(--primary));color:#fff;box-shadow:0 8px 20px rgba(122,10,36,.5)}
+#loginScreen .form-group label{color:#F8EBD0;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+#loginScreen .form-control{background:rgba(255,255,255,.95);color:#0F172A;border-color:transparent}
 .password-container{position:relative;display:flex;align-items:center}
 .password-container input{padding-right:45px}
-.eye-btn{position:absolute;right:12px;background:none;border:none;cursor:pointer;font-size:18px;color:var(--slate)}
-.forgot-link{display:block;margin-top:12px;font-size:12px;color:#FFD97A;font-weight:600;cursor:pointer;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.7)}
-header{background:linear-gradient(135deg,var(--primary) 0%,#3B000E 100%);color:#fff;padding:12px 15px;box-shadow:0 4px 20px rgba(0,0,0,.15);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.logo-area h1{font-size:18px;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:6px}
-.user-info{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);padding:4px 12px;border-radius:30px;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(5px);font-size:12px}
-.btn-logout{background:var(--gold);color:#0F172A;border:none;padding:5px 12px;border-radius:20px;font-weight:700;font-size:11px;cursor:pointer}
-nav{display:flex;background:var(--dark);padding:6px 12px;gap:6px;overflow-x:auto;border-bottom:2px solid var(--gold);-webkit-overflow-scrolling:touch}
-nav button{padding:8px 12px;border:none;background:transparent;color:#94A3B8;font-weight:700;font-size:12px;cursor:pointer;border-radius:8px;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:4px}
-nav button:hover{color:#fff;background:rgba(255,255,255,.08)}
-nav button.active{background:var(--primary);color:#fff;box-shadow:0 4px 12px rgba(107,0,27,.4)}
-.container{max-width:1280px;margin:14px auto;padding:0 12px}
+.eye-btn{position:absolute;right:12px;background:none;border:none;cursor:pointer;font-size:18px;color:#475569}
+.forgot-link{display:block;margin-top:14px;font-size:12px;color:#FFD97A;font-weight:600;cursor:pointer;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+
+/* ===== MODAL ===== */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100vh;height:100dvh;background:rgba(8,12,22,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;justify-content:center;align-items:center;z-index:10000;padding:15px;overflow-y:auto;overscroll-behavior:contain}
+.modal-box{background:var(--card-bg);padding:24px;border-radius:var(--radius-lg);width:100%;max-width:460px;max-height:92vh;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:center;box-shadow:var(--shadow-lg);color:var(--text-color);border:1px solid var(--border);margin:auto;animation:pop .3s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+
+/* ===== HEADER ===== */
+header{position:sticky;top:0;z-index:800;background:linear-gradient(120deg,var(--primary) 0%,#33000C 100%);color:#fff;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));box-shadow:0 8px 24px -8px rgba(60,0,16,.5);display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid rgba(217,179,74,.35)}
+.header-left{display:flex;align-items:center;gap:10px;min-width:0}
+.menu-btn{width:42px;height:42px;flex:none;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);backdrop-filter:blur(6px);cursor:pointer;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;transition:background .2s,transform .2s}
+.menu-btn:hover{background:rgba(255,255,255,.2)}
+.menu-btn:active{transform:scale(.94)}
+.menu-btn span{display:block;width:18px;height:2px;border-radius:2px;background:#fff;transition:transform .3s var(--ease),opacity .2s,width .3s}
+.menu-btn span:nth-child(2){width:12px;align-self:flex-start;margin-left:12px}
+body.drawer-lock .menu-btn span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+body.drawer-lock .menu-btn span:nth-child(2){opacity:0}
+body.drawer-lock .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.logo-area h1{font-size:17px;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:6px;letter-spacing:-.3px;white-space:nowrap}
+.user-info{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);padding:4px 4px 4px 12px;border-radius:30px;border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(8px);font-size:12px;min-width:0}
+.user-info #currentUserDisplay{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw}
+.btn-logout{background:linear-gradient(135deg,#E8C766,var(--gold));color:#0F172A;border:none;padding:7px 14px;border-radius:20px;font-weight:800;font-size:11px;cursor:pointer;transition:transform .15s;white-space:nowrap}
+.btn-logout:active{transform:scale(.95)}
+@media(max-width:560px){.user-info #currentUserDisplay{display:none}.user-info{padding:3px}}
+
+/* ===== DRAWER (chapdan ochiladigan menyu) ===== */
+.drawer-backdrop{position:fixed;inset:0;background:rgba(6,10,20,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .3s;z-index:8990}
+.drawer-backdrop.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;left:0;height:100vh;height:100dvh;width:var(--drawer-w);max-width:86vw;z-index:9000;background:linear-gradient(175deg,#12091A 0%,#0B1220 55%,#150610 100%);color:#E2E8F0;transform:translateX(-104%);transition:transform .38s var(--ease),box-shadow .38s;display:flex;flex-direction:column;border-right:1px solid rgba(217,179,74,.25);padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);will-change:transform}
+.drawer.open{transform:translateX(0);box-shadow:30px 0 70px rgba(0,0,0,.45)}
+.drawer.dragging{transition:none}
+.drawer-head{padding:20px 18px 16px;background:linear-gradient(135deg,rgba(122,10,36,.85),rgba(51,0,12,.9));border-bottom:1px solid rgba(217,179,74,.3);position:relative;overflow:hidden}
+.drawer-head::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(217,179,74,.3),transparent 70%)}
+.drawer-brand{font-size:18px;font-weight:800;color:var(--gold);letter-spacing:-.3px}
+.drawer-user{margin-top:12px;display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.drawer-avatar{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#E8C766,var(--gold));color:#2B1500;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;flex:none}
+.drawer-user-name{font-weight:800;font-size:13px;color:#fff;line-height:1.25;word-break:break-word}
+.drawer-user-role{font-size:11px;color:#F1D98A;font-weight:700;margin-top:2px;letter-spacing:.3px}
+.drawer-close{position:absolute;right:12px;top:12px;width:32px;height:32px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:16px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center}
+.drawer-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 12px}
+.drawer-label{font-size:10px;font-weight:800;letter-spacing:1.2px;color:#7C8AA3;text-transform:uppercase;margin:6px 8px 8px}
+.drawer-nav{display:flex;flex-direction:column;gap:4px}
+.drawer-nav button{position:relative;display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:13px 14px;border:none;background:transparent;color:#B6C2D6;font-weight:700;font-size:13px;cursor:pointer;border-radius:14px;transition:background .2s,color .2s,transform .2s var(--ease)}
+.drawer-nav button:hover{background:rgba(255,255,255,.07);color:#fff;transform:translateX(3px)}
+.drawer-nav button.active{background:linear-gradient(135deg,var(--primary-soft),var(--primary));color:#fff;box-shadow:0 10px 24px -8px rgba(155,27,58,.7)}
+.drawer-nav button.active::before{content:"";position:absolute;left:-12px;top:12px;bottom:12px;width:4px;border-radius:0 4px 4px 0;background:var(--gold)}
+#adminSubMenu{display:none;margin-top:16px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.14)}
+.admin-sub-tabs{display:flex;flex-direction:column;gap:4px}
+.admin-sub-btn{display:block;width:100%;text-align:left;padding:11px 14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#B6C2D6;font-weight:700;font-size:12px;border-radius:12px;cursor:pointer;line-height:1.35;transition:all .2s}
+.admin-sub-btn:hover{background:rgba(255,255,255,.09);color:#fff}
+.admin-sub-btn.active{background:rgba(217,179,74,.16);color:#FFE9A8;border-color:rgba(217,179,74,.55)}
+.drawer-foot{padding:12px;border-top:1px solid rgba(255,255,255,.08);font-size:10px;color:#64748B;text-align:center}
+
+/* ===== LAYOUT ===== */
+.container{max-width:1280px;margin:16px auto;padding:0 12px}
 .tab-content{display:none}
-.tab-content.active{display:block;animation:fadeIn .25s ease-in-out}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.card{background:var(--card-bg);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:16px;border:1px solid var(--border);transition:background .3s,border .3s}
-.card-title{font-size:15px;font-weight:800;color:var(--primary);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--gold-light);padding-bottom:8px;flex-wrap:wrap;gap:6px}
-body.dark-mode .card-title{border-bottom-color:rgba(212,175,55,.2);color:var(--gold)}
+.tab-content.active{display:block;animation:fadeIn .35s var(--ease)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card-bg);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:16px;border:1px solid var(--border);transition:background .3s,border .3s,box-shadow .3s}
+.card-title{font-size:15px;font-weight:800;color:var(--primary);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:10px;flex-wrap:wrap;gap:6px;letter-spacing:-.2px}
+body.dark-mode .card-title{color:var(--gold)}
 .grid-2{display:grid;grid-template-columns:1fr;gap:14px}
 .grid-3{display:grid;grid-template-columns:1fr;gap:12px}
-@media(min-width:768px){.grid-2{grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:20px}.grid-3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.container{margin:24px auto;padding:0 20px}.card{padding:22px;margin-bottom:20px}header{padding:16px 28px}}
+@media(min-width:768px){.grid-2{grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:20px}.grid-3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.container{margin:26px auto;padding:0 22px}.card{padding:24px;margin-bottom:20px}header{padding:12px 26px;padding-top:calc(12px + env(safe-area-inset-top))}}
+
+/* ===== FORMS ===== */
 .form-group{margin-bottom:14px;text-align:left}
 .form-group label{display:block;font-weight:700;margin-bottom:6px;color:var(--slate);font-size:12px}
-#loginScreen .form-group label{color:#F8EBD0;text-shadow:0 1px 6px rgba(0,0,0,.7)}
-.form-control{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;outline:none;background:var(--card-bg);color:var(--text-color);font-weight:600;font-size:14px;transition:border-color .2s}
-#loginScreen .form-control{background:rgba(255,255,255,.94);color:#0F172A}
-.form-control:focus{border-color:var(--primary)}
-.somsa-btns{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:8px;margin-bottom:14px}
-.somsa-btn{background:var(--card-bg);border:2px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;text-align:center;cursor:pointer;color:var(--text-color);transition:all .2s;user-select:none}
-.somsa-btn:hover{border-color:var(--primary);transform:translateY(-2px)}
-.status-group,.payment-group{display:flex;gap:6px;margin-bottom:14px}
-.status-btn,.pay-btn{flex:1;padding:10px 6px;border:2px solid var(--border);border-radius:10px;background:var(--card-bg);font-weight:700;font-size:12px;cursor:pointer;text-align:center;color:var(--text-color);transition:all .2s}
-.status-btn.active-chiqdi{background:var(--success);color:#fff;border-color:var(--success)}
-.status-btn.active-brak{background:var(--danger);color:#fff;border-color:var(--danger)}
-.status-btn.active-asarti{background:var(--warning);color:#fff;border-color:var(--warning)}
-.pay-btn.active-cash{background:var(--success);color:#fff;border-color:var(--success)}
-.pay-btn.active-card{background:var(--blue);color:#fff;border-color:var(--blue)}
+.form-control{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;outline:none;background:var(--card-bg);color:var(--text-color);font-weight:600;font-size:14px;transition:border-color .2s,box-shadow .2s}
+.form-control:focus{border-color:var(--primary-soft);box-shadow:0 0 0 4px rgba(155,27,58,.12)}
+.somsa-btns{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;margin-bottom:14px}
+.somsa-btn{background:var(--card-bg);border:1.5px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;color:var(--text-color);transition:all .25s var(--ease);box-shadow:var(--shadow-sm)}
+.somsa-btn:hover{border-color:var(--primary-soft);transform:translateY(-3px);box-shadow:0 14px 26px -12px rgba(122,10,36,.35)}
+.somsa-btn:active{transform:scale(.97)}
+.status-group,.payment-group{display:flex;gap:8px;margin-bottom:14px}
+.status-btn,.pay-btn{flex:1;padding:11px 6px;border:1.5px solid var(--border);border-radius:12px;background:var(--card-bg);font-weight:700;font-size:12px;cursor:pointer;text-align:center;color:var(--text-color);transition:all .2s}
+.status-btn.active-chiqdi{background:var(--success);color:#fff;border-color:var(--success);box-shadow:0 8px 18px -6px rgba(5,150,105,.55)}
+.status-btn.active-brak{background:var(--danger);color:#fff;border-color:var(--danger);box-shadow:0 8px 18px -6px rgba(220,38,38,.55)}
+.status-btn.active-asarti{background:var(--warning);color:#fff;border-color:var(--warning);box-shadow:0 8px 18px -6px rgba(217,119,6,.55)}
+.pay-btn.active-cash{background:var(--success);color:#fff;border-color:var(--success);box-shadow:0 8px 18px -6px rgba(5,150,105,.55)}
+.pay-btn.active-card{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 8px 18px -6px rgba(37,99,235,.55)}
 .quick-qty{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-.btn-qty{flex:1;min-width:44px;padding:9px 4px;background:var(--border);border:none;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer;color:var(--text-color);transition:all .15s}
+.btn-qty{flex:1;min-width:44px;padding:10px 4px;background:var(--bg-body);border:1px solid var(--border);border-radius:10px;font-weight:800;font-size:12px;cursor:pointer;color:var(--text-color);transition:all .15s}
 .btn-qty:hover{background:var(--primary);color:#fff}
-.btn-main{width:100%;background:var(--primary);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 6px 18px rgba(107,0,27,.3);transition:all .2s;display:flex;justify-content:center;align-items:center;gap:8px}
-.btn-main:hover{background:var(--primary-hover);transform:translateY(-1px)}
-.stat-card{background:linear-gradient(135deg,var(--gold-light),#FFF3D1);border:1px solid rgba(212,175,55,.4);border-left:5px solid var(--gold);padding:14px;border-radius:var(--radius);color:#0F172A}
-body.dark-mode .stat-card{background:linear-gradient(135deg,#1E2530,#2A210A);color:#F8FAFC}
-.stat-card .title{font-size:10px;font-weight:800;color:#8C7323;text-transform:uppercase;letter-spacing:.5px}
+.btn-main{width:100%;background:linear-gradient(135deg,var(--primary-soft),var(--primary));color:#fff;border:none;padding:13px;border-radius:14px;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 10px 22px -8px rgba(122,10,36,.55);transition:all .25s var(--ease);display:flex;justify-content:center;align-items:center;gap:8px;letter-spacing:.2px}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 14px 28px -8px rgba(122,10,36,.6)}
+.btn-main:active{transform:scale(.98)}
+
+/* ===== STATS / TABLES ===== */
+.stat-card{background:linear-gradient(135deg,var(--card-bg),var(--gold-light));border:1px solid rgba(217,179,74,.4);border-left:5px solid var(--gold);padding:16px;border-radius:var(--radius);color:var(--text-color);box-shadow:var(--shadow-sm);transition:transform .25s var(--ease),box-shadow .25s}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.stat-card .title{font-size:10px;font-weight:800;color:#8C7323;text-transform:uppercase;letter-spacing:.7px}
 body.dark-mode .stat-card .title{color:var(--gold)}
-.stat-card .val{font-size:20px;font-weight:800;color:var(--primary);margin-top:4px}
+.stat-card .val{font-size:22px;font-weight:800;color:var(--primary);margin-top:6px;letter-spacing:-.5px}
 body.dark-mode .stat-card .val{color:#fff}
-.table-container{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-container{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px}
 table{width:100%;border-collapse:collapse;margin-top:6px;min-width:300px}
-th,td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--border);font-size:12px}
-th{background:rgba(0,0,0,.02);color:var(--slate);font-weight:700;text-transform:uppercase;font-size:10px}
-.badge{padding:3px 8px;border-radius:20px;font-weight:700;display:inline-block;font-size:10px}
+th,td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:12px}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:rgba(122,10,36,.04)}
+th{background:var(--bg-body);color:var(--slate);font-weight:800;text-transform:uppercase;font-size:10px;letter-spacing:.6px;position:sticky;top:0}
+.badge{padding:4px 10px;border-radius:20px;font-weight:700;display:inline-block;font-size:10px}
 .badge-success{background:var(--success-light);color:var(--success)}
 .badge-danger{background:var(--danger-light);color:var(--danger)}
 .badge-warning{background:var(--warning-light);color:var(--warning)}
 .badge-blue{background:var(--blue-light);color:var(--blue)}
-.btn-action-sm{padding:6px 9px;border:1px solid var(--border);background:var(--card-bg);color:var(--text-color);border-radius:6px;cursor:pointer;font-weight:700;font-size:11px;margin-right:3px;margin-bottom:2px;transition:all .2s}
-.btn-action-sm:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
-.cart-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--border);font-size:13px}
+.btn-action-sm{padding:7px 11px;border:1px solid var(--border);background:var(--card-bg);color:var(--text-color);border-radius:9px;cursor:pointer;font-weight:700;font-size:11px;margin-right:3px;margin-bottom:3px;transition:all .2s}
+.btn-action-sm:hover{background:var(--primary);color:#fff;border-color:var(--primary);transform:translateY(-1px)}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed var(--border);font-size:13px}
 .cart-controls{display:flex;align-items:center;gap:6px}
-.cart-controls button{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--card-bg);color:var(--text-color);font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cart-controls button{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--card-bg);color:var(--text-color);font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cart-controls button:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
 .app-icons{display:flex;justify-content:center;gap:6px;margin:10px 0;flex-wrap:wrap}
-.app-badge{background:var(--border);padding:4px 8px;border-radius:8px;font-weight:700;color:var(--slate);font-size:10px}
-.card-number-box{background:var(--border);padding:12px;border-radius:12px;border:2px dashed var(--blue);margin:12px 0;font-size:16px;font-weight:800}
+.app-badge{background:var(--bg-body);padding:5px 10px;border-radius:10px;font-weight:700;color:var(--slate);font-size:10px;border:1px solid var(--border)}
+.card-number-box{background:var(--blue-light);padding:14px;border-radius:14px;border:2px dashed var(--blue);margin:12px 0;font-size:16px;font-weight:800}
 .section-sep{margin-top:16px;padding-top:14px;border-top:1px dashed var(--border)}
-.hint-text{font-size:11px;color:var(--slate);margin-top:4px;line-height:1.4}
-.notif-alert{background:var(--warning-light);border:1.5px solid var(--warning);border-radius:12px;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;transition:transform .2s}
+.hint-text{font-size:11px;color:var(--slate);margin-top:4px;line-height:1.5}
+.notif-alert{background:var(--warning-light);border:1.5px solid var(--warning);border-radius:14px;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;transition:transform .2s}
 .notif-alert:hover{transform:translateY(-2px)}
-.sms-banner{background:linear-gradient(135deg,#FEF2F2,#FFFBEB);border:2px solid var(--danger);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-body.dark-mode .sms-banner{background:linear-gradient(135deg,#450A0A,#451A03)}
-.sub-paywall-card{background:linear-gradient(135deg,var(--card-bg) 0%,var(--primary-light) 100%);border:2px solid var(--primary);border-radius:var(--radius-lg);padding:24px 18px;max-width:480px;margin:20px auto;text-align:center;box-shadow:0 20px 40px rgba(107,0,27,.15)}
-.admin-credit-card{background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);color:#fff;padding:18px;border-radius:16px;margin:16px 0;text-align:left;border:1px solid var(--gold);box-shadow:0 10px 25px rgba(0,0,0,.25)}
+.sms-banner{background:linear-gradient(135deg,var(--danger-light),var(--warning-light));border:1.5px solid var(--danger);border-radius:16px;padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:var(--shadow-sm)}
+.sub-paywall-card{background:linear-gradient(160deg,var(--card-bg) 0%,var(--primary-light) 100%);border:1.5px solid var(--primary);border-radius:var(--radius-lg);padding:26px 18px;max-width:480px;margin:20px auto;text-align:center;box-shadow:0 30px 60px -20px rgba(122,10,36,.3)}
+.admin-credit-card{background:linear-gradient(135deg,#0B1220 0%,#1E293B 60%,#3A1020 100%);color:#fff;padding:20px;border-radius:20px;margin:16px 0;text-align:left;border:1px solid var(--gold);box-shadow:0 20px 40px -12px rgba(0,0,0,.45);position:relative;overflow:hidden}
+.admin-credit-card::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(217,179,74,.28),transparent 70%)}
 .type-summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;margin-bottom:14px}
-.type-summary-card{background:var(--primary-light);border:1.5px solid rgba(107,0,27,.2);border-radius:12px;padding:10px 12px;text-align:left}
-body.dark-mode .type-summary-card{background:rgba(107,0,27,.25);border-color:rgba(212,175,55,.3)}
+.type-summary-card{background:var(--primary-light);border:1px solid rgba(122,10,36,.15);border-radius:14px;padding:11px 13px;text-align:left}
+body.dark-mode .type-summary-card{background:rgba(122,10,36,.22);border-color:rgba(217,179,74,.3)}
 .type-summary-card .t-name{font-weight:800;font-size:13px;color:var(--primary);margin-bottom:4px}
 body.dark-mode .type-summary-card .t-name{color:var(--gold)}
-.type-summary-card .t-counts{font-size:11px;font-weight:700;color:var(--text-color);line-height:1.5}
-.branch-filter-bar{background:linear-gradient(135deg,var(--primary) 0%,#3B000E 100%);color:#fff;padding:14px 16px;border-radius:var(--radius);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border:1px solid var(--gold)}
+.type-summary-card .t-counts{font-size:11px;font-weight:700;color:var(--text-color);line-height:1.6}
+.branch-filter-bar{background:linear-gradient(120deg,var(--primary) 0%,#33000C 100%);color:#fff;padding:16px 18px;border-radius:var(--radius);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border:1px solid rgba(217,179,74,.5);box-shadow:var(--shadow)}
 .branch-filter-bar select{background-color:#fff;color:#0F172A;font-weight:800;border:2px solid var(--gold);min-width:220px}
-.branch-card{background:var(--card-bg);border:1.5px solid var(--border);border-left:5px solid var(--primary);border-radius:14px;padding:14px;margin-bottom:12px}
-.cred-pill{display:inline-block;background:var(--bg-body);border:1px solid var(--border);padding:3px 8px;border-radius:6px;font-family:monospace;font-size:11px;font-weight:700;margin:2px 0}
+.branch-card{background:var(--card-bg);border:1px solid var(--border);border-left:5px solid var(--primary);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm);transition:box-shadow .25s,transform .25s var(--ease)}
+.branch-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.cred-pill{display:inline-block;background:var(--bg-body);border:1px solid var(--border);padding:3px 9px;border-radius:8px;font-family:monospace;font-size:11px;font-weight:700;margin:2px 0}
 @media(max-width:767px){
 .form-control,input[type=text],input[type=number],input[type=password],select{font-size:16px!important;min-height:44px}
 .btn-main{min-height:48px;font-size:15px}
 table{min-width:480px}
-th,td{padding:9px 6px;white-space:nowrap}
+th,td{padding:10px 7px;white-space:nowrap}
 }
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 <script>
 /* Sahifa yuklanishidan oldin: agar sessiya bor bo'lsa, login ekrani ko'rinmasin (miltillashni oldini oladi) */
@@ -186,23 +262,57 @@ html[data-has-session="1"] #loginScreen{display:none!important}
 <!-- ASOSIY ILOVA -->
 <div id="mainApp" style="display:none;">
     <header>
-        <div class="logo-area"><h1>🥐 SOMSA POS</h1></div>
+        <div class="header-left">
+            <button type="button" class="menu-btn" id="menuBtn" onclick="toggleDrawer()" aria-label="Menyu"><span></span><span></span><span></span></button>
+            <div class="logo-area"><h1>🥐 SOMSA POS</h1></div>
+        </div>
         <div class="user-info">
             <span id="currentUserDisplay" style="font-weight:700; color:white;"></span>
             <button class="btn-logout" onclick="handleLogout()">Chiqish</button>
         </div>
     </header>
 
-    <nav id="mainNav">
-        <button id="navYopuvchi" onclick="switchTab('yopuvchiTab')">👨‍🍳 Somsa Chiqarish</button>
-        <button id="navKassa" onclick="switchTab('kassaTab')">💰 Kassa (Sotuv)</button>
-        <button id="navAdmin" onclick="switchTab('adminPanelTab')">👑 Bosh Admin Paneli</button>
-        <button id="navOwner" onclick="switchTab('ownerDashboardTab')">📊 Tekshiruvchi Paneli</button>
-        <button id="navBranches" onclick="switchTab('branchesTab')">🏪 Somsa Filiallari</button>
-        <button id="navSubPay" onclick="switchTab('subPaymentTab')">💳 Oylik To'lov</button>
-        <button id="navTarix" onclick="switchTab('tarixTab')">📜 Kunlik Tarix</button>
-        <button id="navSozlama" onclick="switchTab('sozlamaTab')">⚙️ Sozlamalar</button>
-    </nav>
+    <!-- CHAPDAN OCHILADIGAN MENYU -->
+    <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+    <aside class="drawer" id="sideDrawer" aria-hidden="true">
+        <div class="drawer-head">
+            <button type="button" class="drawer-close" onclick="closeDrawer()" aria-label="Yopish">✕</button>
+            <div class="drawer-brand">🥐 SOMSA POS</div>
+            <div class="drawer-user">
+                <div class="drawer-avatar" id="drawerAvatar">S</div>
+                <div>
+                    <div class="drawer-user-name" id="drawerUserName">—</div>
+                    <div class="drawer-user-role" id="drawerUserRole">—</div>
+                </div>
+            </div>
+        </div>
+        <div class="drawer-body">
+            <div class="drawer-label">Asosiy menyu</div>
+            <nav id="mainNav" class="drawer-nav">
+                <button id="navYopuvchi" onclick="switchTab('yopuvchiTab')">👨‍🍳 Somsa Chiqarish</button>
+                <button id="navKassa" onclick="switchTab('kassaTab')">💰 Kassa (Sotuv)</button>
+                <button id="navAdmin" onclick="switchTab('adminPanelTab')">👑 Bosh Admin Paneli</button>
+                <button id="navOwner" onclick="switchTab('ownerDashboardTab')">📊 Tekshiruvchi Paneli</button>
+                <button id="navBranches" onclick="switchTab('branchesTab')">🏪 Somsa Filiallari</button>
+                <button id="navSubPay" onclick="switchTab('subPaymentTab')">💳 Oylik To'lov</button>
+                <button id="navTarix" onclick="switchTab('tarixTab')">📜 Kunlik Tarix</button>
+                <button id="navSozlama" onclick="switchTab('sozlamaTab')">⚙️ Sozlamalar</button>
+            </nav>
+
+            <!-- BOSH ADMIN ICHKI MENYUSI -->
+            <div id="adminSubMenu">
+                <div class="drawer-label">Admin bo'limlari</div>
+                <div class="admin-sub-tabs">
+                    <button type="button" class="admin-sub-btn active" id="aSubBtn1" onclick="switchAdminSubTab(1)">➕ 1. Tekshiruvchi Yaratish & Ro'yxat</button>
+                    <button type="button" class="admin-sub-btn" id="aSubBtn2" onclick="switchAdminSubTab(2)">⚙️ 2. Tekshiruvchilarni Boshqarish (Muzlatish / O'chirish)</button>
+                    <button type="button" class="admin-sub-btn" id="aSubBtn3" onclick="switchAdminSubTab(3)">📊 3. Platforma Statistikasi</button>
+                    <button type="button" class="admin-sub-btn" id="aSubBtn4" onclick="switchAdminSubTab(4)">💰 4. Oylik To'lovlar & Tushum</button>
+                    <button type="button" class="admin-sub-btn" id="aSubBtn5" onclick="switchAdminSubTab(5)">💳 5. To'lov Tizimi & Admin Kartasi</button>
+                </div>
+            </div>
+        </div>
+        <div class="drawer-foot">City Somsa POS • Chapga surib yopishingiz mumkin</div>
+    </aside>
 
     <div class="container">
         <!-- SMS / OGOHLANTIRISH BANNERI -->
@@ -351,14 +461,6 @@ html[data-has-session="1"] #loginScreen{display:none!important}
             <div id="adminNotificationsArea"></div>
             <div id="adminDueAlertsArea"></div>
 
-            <div class="admin-sub-tabs">
-                <button type="button" class="admin-sub-btn active" id="aSubBtn1" onclick="switchAdminSubTab(1)">➕ 1. Tekshiruvchi Yaratish & Ro'yxat</button>
-                <button type="button" class="admin-sub-btn" id="aSubBtn2" onclick="switchAdminSubTab(2)">⚙️ 2. Tekshiruvchilarni Boshqarish (Muzlatish / O'chirish)</button>
-                <button type="button" class="admin-sub-btn" id="aSubBtn3" onclick="switchAdminSubTab(3)">📊 3. Platforma Statistikasi</button>
-                <button type="button" class="admin-sub-btn" id="aSubBtn4" onclick="switchAdminSubTab(4)">💰 4. Oylik To'lovlar & Tushum</button>
-                <button type="button" class="admin-sub-btn" id="aSubBtn5" onclick="switchAdminSubTab(5)">💳 5. To'lov Tizimi & Admin Kartasi</button>
-            </div>
-
             <!-- ADMIN 1 -->
             <div id="adminSub1" class="admin-sub-content">
                 <div class="card" style="border:2px solid var(--primary);">
@@ -486,13 +588,13 @@ html[data-has-session="1"] #loginScreen{display:none!important}
                     <div class="form-group" style="margin-bottom:0;"><label>Manzil / Izoh (ixtiyoriy)</label><input type="text" id="branchAddressInput" class="form-control" placeholder="Masalan: Bozor yonida" maxlength="60"></div>
                 </div>
                 <div class="grid-2" style="gap:12px; margin-top:12px;">
-                    <div style="background:var(--bg-body); padding:12px; border-radius:12px; border:1px solid var(--border);">
+                    <div style="background:var(--bg-body); padding:14px; border-radius:14px; border:1px solid var(--border);">
                         <div style="font-weight:800; color:var(--primary); margin-bottom:8px; font-size:13px;">👨‍🍳 Filial Somsachisi (Login & Parol)</div>
                         <div class="form-group"><label>Somsachi Ismi</label><input type="text" id="branchBakerName" class="form-control" placeholder="Masalan: Usta Karim"></div>
                         <div class="form-group"><label>Somsachi Logini</label><input type="text" id="branchBakerLogin" class="form-control" placeholder="Masalan: karim_chilonzor" autocapitalize="none"></div>
                         <div class="form-group" style="margin-bottom:0;"><label>Somsachi Paroli</label><input type="text" id="branchBakerPass" class="form-control" placeholder="Kamida 4 belgi"></div>
                     </div>
-                    <div style="background:var(--bg-body); padding:12px; border-radius:12px; border:1px solid var(--border);">
+                    <div style="background:var(--bg-body); padding:14px; border-radius:14px; border:1px solid var(--border);">
                         <div style="font-weight:800; color:var(--blue); margin-bottom:8px; font-size:13px;">💰 Filial Sotuvchisi (Login & Parol)</div>
                         <div class="form-group"><label>Sotuvchi Ismi</label><input type="text" id="branchSellerName" class="form-control" placeholder="Masalan: Dilshod Kassa"></div>
                         <div class="form-group"><label>Sotuvchi Logini</label><input type="text" id="branchSellerLogin" class="form-control" placeholder="Masalan: dilshod_chilonzor" autocapitalize="none"></div>
@@ -682,7 +784,7 @@ html[data-has-session="1"] #loginScreen{display:none!important}
         <div class="form-group"><label>Login (o'zgartirish mumkin)</label><input type="text" id="editTekLoginInput" class="form-control"></div>
         <div class="form-group"><label>Yangi Parol</label><input type="text" id="editTekPassInput" class="form-control"></div>
         <button class="btn-main" style="background:var(--success); margin-bottom:8px;" onclick="saveEditedTekCredentials()">💾 Saqlash va Tiklash</button>
-        <button class="btn-main" style="background:var(--border); color:var(--text-color);" onclick="closeModal('editTekCredsModal')">Bekor qilish</button>
+        <button class="btn-main" style="background:var(--border); color:var(--text-color); box-shadow:none;" onclick="closeModal('editTekCredsModal')">Bekor qilish</button>
     </div>
 </div>
 
@@ -694,7 +796,7 @@ html[data-has-session="1"] #loginScreen{display:none!important}
         <div class="app-icons"><span class="app-badge">📲 Uzum Bank</span><span class="app-badge">📲 Payme</span><span class="app-badge">📲 Click</span></div>
         <div id="paymentCardInfo"></div>
         <button class="btn-main" style="background:var(--success); margin-bottom:8px;" onclick="confirmCardSale()">✅ TO'LOV QILINDI</button>
-        <button class="btn-main" style="background:var(--border); color:var(--text-color);" onclick="closeModal('paymentModal')">Bekor qilish</button>
+        <button class="btn-main" style="background:var(--border); color:var(--text-color); box-shadow:none;" onclick="closeModal('paymentModal')">Bekor qilish</button>
     </div>
 </div>
 
@@ -709,7 +811,7 @@ html[data-has-session="1"] #loginScreen{display:none!important}
         <div class="form-group" id="editSaleGroup" style="display:none;"><label>Mahsulotlar soni</label><div id="editSaleItems"></div></div>
         <div class="form-group"><label id="editReasonLabel">O'zgartirish sababi</label><input type="text" id="editReasonInput" class="form-control" placeholder="Sababni yozing" maxlength="120"></div>
         <button class="btn-main" style="background:var(--warning); margin-bottom:8px;" onclick="submitEditRequest()">📩 TEKSHIRUVCHIGA YUBORISH</button>
-        <button class="btn-main" style="background:var(--border); color:var(--text-color);" onclick="closeModal('editModal')">Bekor qilish</button>
+        <button class="btn-main" style="background:var(--border); color:var(--text-color); box-shadow:none;" onclick="closeModal('editModal')">Bekor qilish</button>
     </div>
 </div>
 
@@ -721,7 +823,7 @@ html[data-has-session="1"] #loginScreen{display:none!important}
         <div class="form-group"><label>Telefon raqam / Login</label><input type="text" id="forgotPhone" class="form-control" placeholder="Login yoki telefon raqam"></div>
         <div class="form-group"><label>Yangi parol (kamida 4 belgi)</label><input type="password" id="newPassword" class="form-control" placeholder="Yangi parol" autocomplete="new-password"></div>
         <button class="btn-main" style="background:var(--success); margin-bottom:8px;" onclick="saveNewPassword()">SO'ROV YUBORISH</button>
-        <button class="btn-main" style="background:var(--border); color:var(--text-color);" onclick="closeModal('forgotModal')">Bekor qilish</button>
+        <button class="btn-main" style="background:var(--border); color:var(--text-color); box-shadow:none;" onclick="closeModal('forgotModal')">Bekor qilish</button>
     </div>
 </div>
 
@@ -824,6 +926,75 @@ function changeFontSize(size) {
     document.documentElement.style.setProperty('--font-size', size);
     localStorage.setItem('fontSize', size);
 }
+
+// ==========================================
+// CHAPDAN OCHILADIGAN MENYU (DRAWER)
+// ==========================================
+function isDrawerOpen() { return document.getElementById('sideDrawer').classList.contains('open'); }
+function openDrawer() {
+    const d = document.getElementById('sideDrawer');
+    d.style.transform = '';
+    d.classList.add('open');
+    d.setAttribute('aria-hidden', 'false');
+    document.getElementById('drawerBackdrop').classList.add('show');
+    document.body.classList.add('drawer-lock');
+}
+function closeDrawer() {
+    const d = document.getElementById('sideDrawer');
+    d.style.transform = '';
+    d.classList.remove('open');
+    d.setAttribute('aria-hidden', 'true');
+    const bd = document.getElementById('drawerBackdrop');
+    bd.classList.remove('show');
+    bd.style.opacity = '';
+    document.body.classList.remove('drawer-lock');
+}
+function toggleDrawer() { isDrawerOpen() ? closeDrawer() : openDrawer(); }
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && isDrawerOpen()) closeDrawer(); });
+
+// Barmoq bilan surish: chap chetdan o'ngga — ochish, ochiq holatda chapga — yopish
+(function() {
+    let startX = 0, startY = 0, tracking = false, mode = null, dx = 0, decided = false;
+    const W = () => document.getElementById('sideDrawer').offsetWidth;
+    document.addEventListener('touchstart', e => {
+        if (!currentUser || document.getElementById('mainApp').style.display === 'none') return;
+        if (document.querySelector('.modal-overlay[style*="flex"]')) return;
+        const t = e.touches[0];
+        startX = t.clientX; startY = t.clientY; dx = 0; decided = false;
+        if (isDrawerOpen()) { tracking = true; mode = 'close'; }
+        else if (startX <= 24) { tracking = true; mode = 'open'; }
+        else tracking = false;
+    }, { passive: true });
+    document.addEventListener('touchmove', e => {
+        if (!tracking) return;
+        const t = e.touches[0];
+        dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+        const d = document.getElementById('sideDrawer');
+        const bd = document.getElementById('drawerBackdrop');
+        if (!decided) {
+            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+            if (Math.abs(dy) > Math.abs(dx)) { tracking = false; return; }
+            decided = true; d.classList.add('dragging');
+        }
+        const w = W();
+        let pos = mode === 'open' ? Math.min(0, -w + dx) : Math.min(0, Math.max(-w, dx));
+        d.style.transform = `translateX(${pos}px)`;
+        bd.classList.add('show');
+        bd.style.opacity = String(Math.max(0, Math.min(1, 1 + pos / w)));
+    }, { passive: true });
+    document.addEventListener('touchend', () => {
+        if (!tracking) return;
+        tracking = false;
+        const d = document.getElementById('sideDrawer');
+        d.classList.remove('dragging');
+        if (!decided) return;
+        const w = W();
+        if (mode === 'open') (dx > w * 0.33) ? openDrawer() : closeDrawer();
+        else (dx < -w * 0.25) ? closeDrawer() : openDrawer();
+    }, { passive: true });
+})();
 
 function isSuperAdmin(user) { return !!user && (user.isSuperAdmin === true || user.phone === SUPER_ADMIN_LOGIN); }
 
@@ -1075,6 +1246,13 @@ function switchAdminSubTab(n) {
         if (el) el.style.display = (i === n) ? 'block' : 'none';
         if (btn) btn.classList.toggle('active', i === n);
     }
+    // Ichki menyu bosilganda Admin paneliga o'tib, menyuni yopamiz
+    if (currentUser && isSuperAdmin(currentUser)) {
+        const panel = document.getElementById('adminPanelTab');
+        if (!panel.classList.contains('active')) switchTab('adminPanelTab');
+        else closeDrawer();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
 function addTekshiruvchiByAdmin() {
@@ -1291,6 +1469,9 @@ function enterApp(user, restoreTab) {
     const roleBadge = isSuperAdmin(user) ? 'BOSH ADMIN' : (ROLE_NAMES[user.role] || user.role).toUpperCase();
     const brTag = user.branchId ? ` • ${getBranchName(user.branchId)}` : '';
     document.getElementById('currentUserDisplay').innerText = `👤 ${user.name} (${roleBadge}${brTag})`;
+    document.getElementById('drawerUserName').innerText = user.name;
+    document.getElementById('drawerUserRole').innerText = roleBadge + brTag;
+    document.getElementById('drawerAvatar').innerText = (user.name || '?').trim().charAt(0).toUpperCase();
 
     if (!restoreTab && user.role === 'tekshiruvchi' && !isSuperAdmin(user) && !checkSubscriptionActive(user)) {
         pushAdminNotif(user.phone, user.name, 'new_user', `Tekshiruvchi tizimga kirdi (To'lov kutilmoqda): ${user.name} (${user.phone})`);
@@ -1300,10 +1481,11 @@ function enterApp(user, restoreTab) {
 
     // Oxirgi ochiq bo'limni tiklash (agar bu rol uchun ruxsat etilgan bo'lsa)
     if (restoreTab) {
-        const btn = Array.from(document.querySelectorAll('nav button'))
+        const btn = Array.from(document.querySelectorAll('#mainNav button'))
             .find(b => (b.getAttribute('onclick') || '').includes("'" + restoreTab + "'"));
         if (btn && btn.style.display !== 'none') switchTab(restoreTab);
     }
+    closeDrawer();
     refreshAllUI();
 }
 
@@ -1327,6 +1509,7 @@ function handleLogout() {
     currentUser = null;
     cart = [];
     renderCart();
+    closeDrawer();
     document.getElementById('mainApp').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'flex';
 }
@@ -1337,6 +1520,7 @@ function applyRolePermissions(user) {
     });
     const show = ids => ids.forEach(id => document.getElementById(id).style.display = 'flex');
     document.getElementById('priceCard').style.display = (user.role === 'tekshiruvchi' && !isSuperAdmin(user)) ? 'block' : 'none';
+    document.getElementById('adminSubMenu').style.display = isSuperAdmin(user) ? 'block' : 'none';
 
     if (user.role === 'somsachi') {
         show(['navYopuvchi', 'navTarix']);
@@ -2188,12 +2372,14 @@ function saveCardNumber() {
 
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('#mainNav button').forEach(el => el.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
-    const btn = Array.from(document.querySelectorAll('nav button')).find(b => (b.getAttribute('onclick') || '').includes("'" + tabId + "'"));
+    const btn = Array.from(document.querySelectorAll('#mainNav button')).find(b => (b.getAttribute('onclick') || '').includes("'" + tabId + "'"));
     if (btn) btn.classList.add('active');
     // Oxirgi ochiq bo'limni eslab qolish (sahifa yangilanganda tiklanadi)
     try { if (currentUser) localStorage.setItem('lastTab', tabId); } catch (e) {}
+    closeDrawer();
+    window.scrollTo({ top: 0 });
 }
 
 function refreshAllUI() {
