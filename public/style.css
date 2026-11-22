@@ -121,6 +121,7 @@ body.drawer-lock .menu-btn span:nth-child(3){transform:translateY(-7px) rotate(-
 
 /* ===== LAYOUT ===== */
 .container{max-width:1280px;margin:16px auto;padding:0 12px}
+.container::after{content:"";display:block;height:calc(120px + env(safe-area-inset-bottom))}
 .tab-content{display:none}
 .tab-content.active{display:block;animation:fadeIn .35s var(--ease)}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
