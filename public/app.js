@@ -1628,6 +1628,7 @@ function switchTab(tabId, silent) {
     try { if (currentUser && !silent) localStorage.setItem('lastTab', tabId); } catch (e) {}
     closeDrawer();
     window.scrollTo({ top: 0 });
+    setTimeout(updateScrollButtons, 50);
 }
 
 function refreshAllUI() {
@@ -1660,7 +1661,40 @@ function refreshAllUI() {
     if (so && document.activeElement !== so) so.value = appSubSettings.cardOwner;
 }
 
+// ==========================================
+// O'NG TOMONDAGI TEPAGA / PASGA TUGMALARI
+// ==========================================
+function initScrollButtons() {
+    if (document.getElementById('scrollFab')) return;
+    const box = document.createElement('div');
+    box.className = 'scroll-fab';
+    box.id = 'scrollFab';
+    box.innerHTML = '<button type="button" id="scrollUpBtn" aria-label="Tepaga">▲</button><button type="button" id="scrollDownBtn" aria-label="Pastga">▼</button>';
+    document.body.appendChild(box);
+    document.getElementById('scrollUpBtn').onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('scrollDownBtn').onclick = () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+    window.addEventListener('scroll', updateScrollButtons, { passive: true });
+    window.addEventListener('resize', updateScrollButtons, { passive: true });
+    setInterval(updateScrollButtons, 800);
+    updateScrollButtons();
+}
+function updateScrollButtons() {
+    const box = document.getElementById('scrollFab');
+    if (!box) return;
+    const app = document.getElementById('mainApp');
+    const loggedIn = !!currentUser && app && app.style.display !== 'none';
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const canScroll = max > 120;
+    const showUp = y > 150;
+    const showDown = max - y > 150;
+    document.getElementById('scrollUpBtn').classList.toggle('hide', !showUp);
+    document.getElementById('scrollDownBtn').classList.toggle('hide', !showDown);
+    box.classList.toggle('show', loggedIn && canScroll && (showUp || showDown));
+}
+
 window.onload = function() {
+    initScrollButtons();
     document.getElementById('fontSizeSelect').value = savedFontSize;
     selectLoginRole('sotuvchi');
     renderCart();
