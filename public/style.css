@@ -58,7 +58,7 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
-  overflow-x: hidden;
+  overflow-x: clip;
   scroll-behavior: smooth;
 }
 
@@ -77,9 +77,9 @@ body {
     radial-gradient(900px 400px at 100% -10%, rgba(122,10,36,.06), transparent 60%),
     radial-gradient(700px 400px at -10% 110%, rgba(217,179,74,.07), transparent 60%);
   color: var(--text-color);
-  padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  padding-bottom: calc(36px + env(safe-area-inset-bottom));
   transition: background .3s, color .3s;
-  overflow-x: hidden;
+  overflow-x: clip;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
@@ -94,6 +94,7 @@ input, select, button, textarea {
   font-family: inherit;
   -webkit-appearance: none;
   appearance: none;
+  border-radius: inherit;
   max-width: 100%;
 }
 
@@ -756,6 +757,7 @@ body.drawer-lock .menu-btn span:nth-child(3) { transform: translateY(-7px) rotat
 /* ===== LAYOUT ===== */
 #mainApp, .container, .tab-content {
   width: 100%;
+  max-width: 100%;
   touch-action: pan-y;
 }
 
@@ -763,12 +765,6 @@ body.drawer-lock .menu-btn span:nth-child(3) { transform: translateY(-7px) rotat
   max-width: 1280px;
   margin: 14px auto;
   padding: 0 10px;
-}
-
-.container::after {
-  content: "";
-  display: block;
-  height: calc(100px + env(safe-area-inset-bottom));
 }
 
 .tab-content { display: none; }
@@ -878,7 +874,7 @@ body.dark-mode .card-title { color: var(--gold); }
   width: 100%;
 }
 
-@media (min-width: 480px) {
+@media (min-width: 520px) {
   .somsa-btns { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
 }
 
@@ -913,7 +909,7 @@ body.dark-mode .card-title { color: var(--gold); }
 }
 
 .status-btn, .pay-btn {
-  flex: 1 1 120px;
+  flex: 1 1 110px;
   min-width: 0;
   padding: 10px 6px;
   border: 1.5px solid var(--border);
@@ -1042,7 +1038,7 @@ table {
 }
 
 th, td {
-  padding: 9px 5px;
+  padding: 8px 4px;
   text-align: left;
   border-bottom: 1px solid var(--border);
   font-size: 11px;
@@ -1324,7 +1320,7 @@ body.dark-mode .type-summary-card .t-name { color: var(--gold); }
   input[type="number"],
   input[type="password"],
   select {
-    font-size: 16px;
+    font-size: 16px !important;
     min-height: 44px;
   }
 
@@ -1335,8 +1331,8 @@ body.dark-mode .type-summary-card .t-name { color: var(--gold); }
   }
 
   th, td {
-    padding: 8px 4px;
-    font-size: 10.5px;
+    padding: 8px 3px;
+    font-size: 10px;
   }
 }
 
